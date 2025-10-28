@@ -1,0 +1,9 @@
+%% Rear axel parameters
+L = 1.2; % axel längd
+D = 0.1; % axel diameter (tjockare del)
+d = 0.6*D; % axel diameter (tunnare del)
+
+A = pi*D^2/4;
+I = (pi*D^4)/64; % Tröghetsmoment Ix och 
+%% Calculation of stresses
+
