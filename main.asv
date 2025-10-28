@@ -1,9 +1,42 @@
 %% Rear axel parameters
 L = 1.2; % axel längd
-D = 0.1; % axel diameter (tjockare del)
+D = 0.1; % axel diameter (tjockare del) Bestäm!
 d = 0.6*D; % axel diameter (tunnare del)
+R = D/2; % radie (tjockare del)
+r = d/2; % radie(tunnare del)
 
-A = pi*D^2/4;
-I = (pi*D^4)/64; % Tröghetsmoment Ix och 
-%% Calculation of stresses
+A = (pi*D^2)/4; % Tvärsnittsarea (tjockare del)
+a = (pi*d^2)/4; % Tvärsnittsarea (tunnare del)
+K = (pi*D^4)/64; % Vridstyvhetens tvärsnittsfaktor (tjockare del)
+k = (pi*d^4)/64; % Vridstyvhetens tvärsnittsfaktor (tunnare del)
+I = (pi*D^4)/32; % Areatröghetsmoment (tjockare del)
+i = (pi*d^4)/32; % Areatröghetsmoment (tunnare del)
 
+h = 0.001; % tidssteg för iteration
+N = L/h; % antalg iterationer
+
+%% Stress functions
+
+% gör minifunktioner för spänningsberäkning
+
+% koordinater: x y z
+% snittstorheter = Fx Fy Fz Mx My Mz
+% övrigt: sigma (avstånd från balkens neutrallager vid böjning), måste
+% lägga till detta^
+
+normalspanning = @(z, Fy, Mx, Mz, A, I) (Fy/A)+sigma*(sqrt((Mx^2)+(Mz^2)))/I;
+
+vridskjuvspanning = @(My, K, r) (My*r)/K;
+
+tvarskjuvspanning = @()
+
+
+
+%% Nominal stress functions
+
+
+
+
+%% Iteration over axel
+
+% iterera över balk i tidssteg h, beräkna alla spänningar i alla punkter. 
