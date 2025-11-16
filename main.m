@@ -15,29 +15,12 @@ i = (pi*d^4)/32; % Areatröghetsmoment x och z (tunnare del)
 h = 0.001; % tidssteg för iteration
 N = L/h; % antalg iterationer
 
-%% Stress functions
-
-% gör minifunktioner för spänningsberäkning
-
-% koordinater: x y z
-% snittstorheter = Tx Ty Tz Mx My Mz
-% övrigt: sigma (avstånd från balkens neutrallager vid böjning), måste
-% lägga till detta^
-
-normalspanning = @(z, Ty, Mx, Mz, A, I) (Ty/A)+sigma*(sqrt((Mx^2)+(Mz^2)))/I; % generellt uttryck
-
-vridskjuvspanning = @(My, K, r) (My*r)/K; % generellt uttryck
-
-tvarskjuvspanning = @(Tx, Tz, A) sqrt((Tx^2)+(Tz^2))/A; % nominellt uttryck
-
-bojskjvspanning = @(x, z, Mx, Mz) ((Mx*z)/I) + ((Mz*x)/I); % generellt uttryck
+%% Snittstorhet calc
 
 
-
-%% Nominal stress functions
-
-
-
+%% Nominal stress calc
+broms_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, R_ix, F_k, A, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
+accel_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, R_ix, F_k, A, a, I, i, K, k);
 
 %% Iteration over axel
 
