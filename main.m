@@ -19,9 +19,9 @@ N = L/h; % antalg iterationer
 
 
 %% Nominal stress calc
-broms_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, R_ix, F_k, A, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
-accel_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, R_ix, F_k, A, a, I, i, K, k);
-
+broms_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
+accel_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k);
+kurv_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k)
 %% Iteration over axel
 
 % iterera över balk i tidssteg h, beräkna alla spänningar i alla punkter. 
