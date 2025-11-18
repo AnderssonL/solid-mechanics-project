@@ -50,6 +50,10 @@ N = L/h; % antalg iterationer
 [V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva] = kurvtagning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
 [FD_normal, Nf_normal, Nb_normal, Mb_normal] = körning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms,r_hjul);
 
+
+%% Lagerkrafter calc
+
+
 %% Snittstorhet calc
 
 
@@ -57,6 +61,3 @@ N = L/h; % antalg iterationer
 broms_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
 accel_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k);
 kurv_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k)
-%% Iteration over axel
-
-% iterera över balk i tidssteg h, beräkna alla spänningar i alla punkter. 
