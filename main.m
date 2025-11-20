@@ -55,6 +55,9 @@ N = L/h; % antalg iterationer
 
 
 %% Snittstorhet calc
+[y_broms, Tyx_br, Tyz_br, N_br, Mx_br, My_br] = broms_snittstorheter(L, b_b, b_1, b_d, N_points, Nb_broms, FB_broms, Mb_broms);
+[y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc] = accel_snittstorheter(L, b_b, b_1, b_d, N_points, Nb_accel, Rix_accel, FD_accel, Mb_accel);
+[y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N_points, V_bi_kurva, V_by_kurva, Riz_kurva, H_bi_kurva, H_by_kurva);
 
 
 %% Nominal stress calc
