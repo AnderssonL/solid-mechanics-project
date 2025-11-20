@@ -4,22 +4,25 @@
 m = 150;            % Fordonets vikt inkl. förare [kg]
 df = 0.8;           % Avstånd framaxel till tyngdpunkt [m] (600-1000 mm)
 db = 0.3;           % Avstånd bakaxel till tyngdpunkt [m] (200-400 mm)
-h = 0.45;           % Tyngdpunktens vertikala position [m] (30-60 cm)
-h1 = 0.2;           % Avstånd tyngdpunkt till luftmotståndets verkningslinje [m] (15-25 cm)
-h_luft = h + h1;    % Höjd från marken till luftmotståndets angreppspunkt [m]
+hTP = 0.45;           % Tyngdpunktens vertikala position [m] (30-60 cm)
+hFL = 0.2;           % Avstånd tyngdpunkt till luftmotståndets verkningslinje [m] (15-25 cm)
+h_luft = hTP+ hFL;    % Höjd från marken till luftmotståndets angreppspunkt [m]
 A_front = 0.5;      % Fordonets frontarea [m^2]
 Cd = 0.3;           % Luftmotståndskoefficient (c i PM)
 dh = 0.3;           % Hjuldiameter [m] (240-400 mm)
 r_hjul = dh / 2;    % Hjulradie [m]
+r_drev = 0.05;      % Drevets radie [m] 
+r_broms = 0.09;     % Bromsskivans radie [m]
+
 
 a1 = 6;             % Acceleration i accelerationslastfallet [m/s^2]
 a2 = -15;           % Max retardation (värdet är positivt) [m/s^2]
 v_max_kmh = 100;    % Maxfart (rakt fram) [km/h] (70-120)
 v_max_ms = v_max_kmh / 3.6; % Konvertera maxfart till [m/s]
+gamma = 0.8;        % Faktor för max hastighet i kurva          Bestäm!
 v_kurva_ms = gamma * v_max_ms; % Hastighet i kurvan [m/s]
 v_accel = 1;        % Sätt en låg hastighet [m/s]
 R_kurva = 10;       % Kurvradie [m] (5-15 m)
-gamma = 0.8;        % Faktor för max hastighet i kurva (ska egentligen bestämmas)
 
 
 %% World parameters
@@ -34,6 +37,11 @@ d = 0.6*D; % axel diameter (tunnare del)
 R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
 
+b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
+b_b = 0.08;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
+b_d = 0.25;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
+                    % L/2 = 0.55. Så 0.15 < 0.25 < 0.55. OK.
+
 A = (pi*D^2)/4; % Tvärsnittsarea (tjockare del)
 a = (pi*d^2)/4; % Tvärsnittsarea (tunnare del)
 K = (pi*D^4)/64; % Vridstyvhetens tvärsnittsfaktor (tjockare del)
@@ -45,19 +53,19 @@ h = 0.001; % tidssteg för iteration
 N = L/h; % antalg iterationer
 
 %% Hjulkrafter calc
-[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
-[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a_broms, r_hjul, g);
+[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
+[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
 [V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva] = kurvtagning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
-[FD_normal, Nf_normal, Nb_normal, Mb_normal] = körning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms,r_hjul);
+[FD_normal, Nf_normal, Nb_normal, Mb_normal] = körning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, r_hjul);
 
 
 %% Lagerkrafter calc
 
 
 %% Snittstorhet calc
-[y_broms, Tyx_br, Tyz_br, N_br, Mx_br, My_br] = broms_snittstorheter(L, b_b, b_1, b_d, N_points, Nb_broms, FB_broms, Mb_broms);
-[y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc] = accel_snittstorheter(L, b_b, b_1, b_d, N_points, Nb_accel, Rix_accel, FD_accel, Mb_accel);
-[y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N_points, V_bi_kurva, V_by_kurva, Riz_kurva, H_bi_kurva, H_by_kurva);
+[y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br] = broms_snittstorheter(L, b_b, b_1, b_d, N, Nb_broms, m, a2, Cd, A_front, rho_luft, v_max_ms, r_hjul, r_broms);
+[y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc] = accel_snittstorheter(L, b_b, b_1, b_d, N, Nb_accel, m, a1, Cd, A_front, rho_luft, v_accel, r_hjul, r_drev);
+[y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N, V_bi_kurva, V_by_kurva, H_bi_kurva, H_by_kurva);
 
 
 %% Nominal stress calc
