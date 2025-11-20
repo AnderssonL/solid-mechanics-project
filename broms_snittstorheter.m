@@ -1,74 +1,73 @@
-function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd, N_points, Nb, Fb, Mbi)
-% BROMS_SNITTSTORHETER Beräknar snittkrafter med 6 specifika intervall
+function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd, N_points, Nb, m, a_broms, Cd, A, rho, v, r_hjul, r_broms)
+% BROMS_SNITTSTORHETER Beräknar snittkrafter och bromskraft internt
 %
 % Inputs:
-%   L        - Total längd (m)
-%   bb       - Avstånd bb (m)
-%   b1       - Avstånd b1 (m)
-%   bd       - Avstånd bd (m)
-%   N_points - Antal punkter
-%   Nb, Fb, Mbi - Krafter och moment (lägg till fler här om du behöver)
+%   ...geometri...
+%   Cd, A, rho, v - För beräkning av luftmotstånd
+%   m, a_broms    - För beräkning av tröghetskraft
 
-    % --- Initiera vektorer ---
-    y_vec = linspace(0, L, N_points);
+    % --- 1. Beräkna krafter internt ---
     
-    Tyx = zeros(1, N_points);     
-    Tyz = zeros(1, N_points);     
-    N_kraft = zeros(1, N_points); 
-    Mx = zeros(1, N_points);      
-    My = zeros(1, N_points);      
+    % Beräkna Luftmotstånd: F_luft = 0.5 * rho * A * Cd * v^2
+    F_luft = 0.5 * rho * A * Cd * v^2;
+    
+    % Total kraft vid vägbanan (Tröghet + Luft)
+    F_total_road = (m * a_broms) + F_luft;
+    
+    % Moment från hjulet
+    M_wheel = F_total_road * r_hjul;
+    
+    % Bromskraft på skivan (Klämkraft/Skjuv)
+    Fb = M_wheel / r_broms;
+    
+    % Reaktionskrafter i lagren (X-led)
+    Ryx = (Fb * (b1 - bb)) / (L - 2*b1);
+    Rix = Fb - Ryx;
 
-    % --- Loopa genom alla punkter ---
+    % --- 2. Initiera vektorer ---
+    y_vec = linspace(0, L, N_points);
+    Tyx = zeros(1, N_points); Tyz = zeros(1, N_points);
+    N_kraft = zeros(1, N_points); Mx = zeros(1, N_points); My = zeros(1, N_points);
+
+    % --- 3. Loopa genom intervallen ---
     for i = 1:N_points
-        y = y_vec(i); % Aktuell position
+        y = y_vec(i);
         
-        % --- Intervall 1: 0 till bb ---
         if y >= 0 && y < bb
-            Tyx(i)     = 0;          % Fyll i rätt värde
-            Tyz(i)     = -Nb;          % Fyll i rätt värde
-            N_kraft(i) = 0;          % Fyll i rätt värde
-            Mx(i)      = 0;          % Fyll i rätt värde
-            My(i)      = -Nb * y;          % Fyll i rätt värde
+            Tyx(i) = 0;
+            Tyz(i) = -Nb;
+            Mx(i)  = -Nb * y;
+            My(i)  = -M_wheel;    
             
-        % --- Intervall 2: bb till b1 ---
         elseif y >= bb && y < b1
-            Tyx(i)     = Fb; 
-            Tyz(i)     = -Nb; 
-            N_kraft(i) = 0; 
-            Mx(i)      = -Mbi; 
-            My(i)      = -Nb * y; 
+            Tyx(i) = -Fb;         
+            Tyz(i) = -Nb;
+            Mx(i)  = -Nb * y;
+            My(i)  = 0;           
 
-        % --- Intervall 3: b1 till bd ---
         elseif y >= b1 && y < bd
-            Tyx(i)     = 0; 
-            Tyz(i)     = 0; 
-            N_kraft(i) = 0; 
-            Mx(i)      = -Mbi; 
-            My(i)      = -2*Nb * y - Nb * b1; 
+            Tyx(i) = -Fb + Rix;
+            Tyz(i) = 0;
+            Mx(i)  = -Nb * b1;
+            My(i)  = 0;
 
-        % --- Intervall 4: bd till L-b1 ---
         elseif y >= bd && y < (L - b1)
-            Tyx(i)     = 0; 
-            Tyz(i)     = 0; 
-            N_kraft(i) = 0; 
-            Mx(i)      = -Mbi; 
-            My(i)      = -2*Nb * y - Nb * b1; 
+            Tyx(i) = -Ryx;
+            Tyz(i) = 0;
+            Mx(i)  = -Nb * b1;
+            My(i)  = 0;
 
-        % --- Intervall 5: L-b1 till L-bb ---
         elseif y >= (L - b1) && y < (L - bb)
-            Tyx(i)     = -Fb; 
-            Tyz(i)     = Nb; 
-            N_kraft(i) = 0; 
-            Mx(i)      = -Mbi; 
-            My(i)      = Nb * L + Nb * y; 
+            Tyx(i) = 0;
+            Tyz(i) = Nb;
+            Mx(i)  = Nb * (y - L);
+            My(i)  = 0;
 
-        % --- Intervall 6: L-bb till L ---
         elseif y >= (L - bb) && y <= L
-            Tyx(i)     = 0; 
-            Tyz(i)     = Nb; 
-            N_kraft(i) = 0; 
-            Mx(i)      = 0; 
-            My(i)      = Nb * L + Nb * y; 
+            Tyx(i) = 0;
+            Tyz(i) = Nb;
+            Mx(i)  = Nb * (y - L);
+            My(i)  = 0;
         end
     end
 end
