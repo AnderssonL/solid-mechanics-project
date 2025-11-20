@@ -1,78 +1,49 @@
-function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = kurvtagning_snittstorheter(L, bb, b1, bd, N_points, Vi, Vy, Riz, Hi, Hy)
-% KURVTAGNING_SNITTSTORHETER Beräknar snittkrafter för kurvtagning (6 intervall)
+function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = kurvtagning_snittstorheter(L, bb, b1, bd, N_points, Vi, Vy, Hi, Hy)
+% KURVTAGNING_SNITTSTORHETER Beräknar snittkrafter för kurvtagning
 %
 % Inputs:
-%   L        - Total längd (m)
-%   bb       - Avstånd bb (m)
-%   b1       - Avstånd b1 (m)
-%   bd       - Avstånd bd (m)
-%   N_points - Antal punkter
-%   Vi       - Kraft Inre hjul (N)
-%   Vy       - Kraft Yttre hjul (N)
-%   Riz      - Reaktionskraft Z (N)
-%   Hi       - Normalkraft Inre (N)
-%   Hy       - Normalkraft Yttre (N)
+%   Vi       - Vertikal kraft Inre hjul (N)
+%   Vy       - Vertikal kraft Yttre hjul (N)
+%   Hi       - Lateral kraft Inre hjul (N)
+%   Hy       - Lateral kraft Yttre hjul (N)
+%   L, b1... - Geometri
 
-    % --- Initiera vektorer ---
-    y_vec = linspace(0, L, N_points);
+    denominator = 2*b1 - L;
     
-    Tyx = zeros(1, N_points);     
-    Tyz = zeros(1, N_points);     
-    N_kraft = zeros(1, N_points); 
-    Mx = zeros(1, N_points);      
-    My = zeros(1, N_points);      
+    Riz = (Vi * (L - b1) + Vy * (-b1)) / denominator;
+    
+    Ryz = (-Vi * b1 - Vy * (b1 - L)) / denominator;
 
-    % --- Loopa genom alla punkter ---
+    y_vec = linspace(0, L, N_points);
+    Tyx = zeros(1, N_points); Tyz = zeros(1, N_points);
+    N_kraft = zeros(1, N_points); Mx = zeros(1, N_points); My = zeros(1, N_points);
+
     for i = 1:N_points
-        y = y_vec(i); % Aktuell position
+        y = y_vec(i);
         
-        % --- Intervall 1: 0 till bb ---
-        if y >= 0 && y < bb
-            Tyx(i)     = 0;          % Fyll i din formel
-            Tyz(i)     = -Vi;          % Fyll i din formel
-            N_kraft(i) = Hi;          % Fyll i din formel
-            Mx(i)      = -Vi * y;          % Fyll i din formel
-            My(i)      = 0;          % Fyll i din formel
-            
-        % --- Intervall 2: bb till b1 ---
-        elseif y >= bb && y < b1
-            Tyx(i)     = 0; 
-            Tyz(i)     = -Vi; 
+        if y < b1
             N_kraft(i) = Hi; 
-            Mx(i)      = -Vi * y; 
-            My(i)      = 0; 
-
-        % --- Intervall 3: b1 till bd ---
-        elseif y >= b1 && y < bd
-            Tyx(i)     = 0; 
-            Tyz(i)     = -Vi - Riz; 
+        else
             N_kraft(i) = Hy; 
-            Mx(i)      = Riz * (b1-y) -Vi * y; 
-            My(i)      = 0; 
-
-        % --- Intervall 4: bd till L-b1 ---
-        elseif y >= bd && y < (L - b1)
-            Tyx(i)     = 0; 
-            Tyz(i)     = -Vi - Riz; 
-            N_kraft(i) = Hy; 
-            Mx(i)      = Riz * (b1-y) -Vi * y; 
-            My(i)      = 0; 
-
-        % --- Intervall 5: L-b1 till L-bb ---
-        elseif y >= (L - b1) && y < (L - bb)
-            Tyx(i)     = 0; 
-            Tyz(i)     = -Vy; 
-            N_kraft(i) = Hy; 
-            Mx(i)      = Riz * b1 + Ryz * (L -bi) + Vy * y; 
-            My(i)      = 0; 
-
-        % --- Intervall 6: L-bb till L ---
-        elseif y >= (L - bb) && y <= L
-            Tyx(i)     = 0; 
-            Tyz(i)     = -Vy; 
-            N_kraft(i) = Hy; 
-            Mx(i)      = Riz * b1 + Ryz * (L -bi) + Vy * y; 
-            My(i)      = 0; 
         end
+        
+        shear_sum = -Vi;
+        moment_sum = -Vi * y;
+        
+        if y >= b1
+            shear_sum = shear_sum - Riz;
+            moment_sum = moment_sum - Riz * (y - b1);
+        end
+        
+        if y >= (L - b1)
+             shear_sum = shear_sum - Ryz;
+             moment_sum = moment_sum - Ryz * (y - (L - b1));
+        end
+        
+        Tyz(i) = shear_sum;
+        Mx(i)  = moment_sum;
+        
+        Tyx(i) = 0;
+        My(i)  = 0;
     end
 end
