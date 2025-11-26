@@ -1,4 +1,4 @@
-function [V_bi, V_fi, V_by, V_fy, H_bi, H_fi, H_by, H_fy, M_b] = kurvtagning_hjulkrafter(df, db, h1, h, m, Cd, p, v, R, L, r, g)
+function [V_bi, V_fi, V_by, V_fy, H_bi, H_fi, H_by, H_fy, M_b, F_D] = kurvtagning_hjulkrafter(df, db, h1, h, m, Cd, p, v, R, L, r, g)
 
 % --- Grundläggande krafter ---
 F_L = 1/2 * Cd * p * v^2;
@@ -27,5 +27,6 @@ H_by = (V_by / (V_bi + V_by)) * (F_C * df / axelavstånd);
 
 % --- Drivmoment per bakhjul ---
 M_b = F_D * r / 2;
+
 
 end
