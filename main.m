@@ -55,7 +55,7 @@ N = L/h; % antalg iterationer
 %% Hjulkrafter calc
 [FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
 [FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
-[V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva] = kurvtagning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
+[V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva, FD_kurva] = kurvtagning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
 [FD_normal, Nf_normal, Nb_normal, Mb_normal] = körning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, r_hjul);
 
 
