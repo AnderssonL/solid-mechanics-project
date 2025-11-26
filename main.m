@@ -69,6 +69,10 @@ N = L/h; % antalg iterationer
 
 
 %% Nominal stress calc
-broms_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
-accel_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k);
-kurv_spanning(y, b_b, b_1, b_d, L, N_b, M_b1, M_k, H_i, V_i, V_y, R_ix, R_iz, R_yz, F_k, A, a, I, i, K, k)
+% If 0 is passed -> variable is unused in func
+% what to do with y? Svar: Iterera
+% To add: M_b1 [is M_b1 == Mb?], M_k, H_i, V_i, V_y
+% To calculate: R_ix [se snittstorhet], R_iz [se snittstorhet], R_yz [se snittstorhet], F_k [se komponentkraft-accel]
+broms_spanning(y, b_b, b_1, b_d, L, Nb_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner
+accel_spanning(y, b_b, b_1, b_d, L, Nb_accel, 0, M_k, 0, 0, 0, R_ix, 0, 0, F_k, A, a, I, i, K, k);
+kurv_spanning(y, b_b, b_1, b_d, L, 0, 0, 0, H_i, V_i, V_y, 0, R_iz, R_yz, 0, A, a, I, i, 0, 0)
