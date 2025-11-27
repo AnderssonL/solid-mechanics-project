@@ -15,7 +15,7 @@ function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd
     F_total_road = (m * a_broms) - F_luft; % samma som F_b i broms_hjulkrafter
     
     % Moment från hjulet
-    M_wheel = F_total_road * r_hjul;
+    M_wheel = F_total_road * r_hjul / 2;
     
     % Bromskraft på skivan (Klämkraft/Skjuv)
     Fb = M_wheel / r_broms;
@@ -71,4 +71,5 @@ function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd
         end
     end
 end
+
 
