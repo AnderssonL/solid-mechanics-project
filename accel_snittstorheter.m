@@ -1,4 +1,4 @@
-function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = accel_snittstorheter(L, bb, b1, bd, N_points, Nb, m, a_accel, Cd, A, rho, v, r_hjul, r_drev)
+function [y_vec, Tyx, Tyz, N_kraft, Mx, My, Mk] = accel_snittstorheter(L, bb, b1, bd, N_points, Nb, m, a_accel, Cd, A, rho, v, r_hjul, r_drev)
 % ACCEL_SNITTSTORHETER Beräknar snittkrafter för acceleration
 %
 % Inputs:
@@ -89,3 +89,4 @@ function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = accel_snittstorheter(L, bb, b1, bd
         end
     end
 end
+
