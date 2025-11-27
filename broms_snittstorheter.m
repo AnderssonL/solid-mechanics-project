@@ -12,7 +12,7 @@ function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd
     F_luft = 0.5 * rho * A * Cd * v^2;
     
     % Total kraft vid vägbanan (Tröghet + Luft)
-    F_total_road = (m * a_broms) + F_luft;
+    F_total_road = (m * a_broms) - F_luft; % samma som F_b i broms_hjulkrafter
     
     % Moment från hjulet
     M_wheel = F_total_road * r_hjul;
@@ -71,3 +71,4 @@ function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd
         end
     end
 end
+
