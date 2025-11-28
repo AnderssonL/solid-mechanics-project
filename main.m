@@ -56,25 +56,23 @@ N = L/h; % antalg iterationer
 [FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
 [FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
 [V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva, FD_kurva, V_i_kurva, V_y_kurva, H_i_kurva, H_y_kurva] = kurvtagning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
-[FD_normal, Nf_normal, Nb_normal, Mb_normal] = körning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, r_hjul);
-
+[FD_normal, Nf_normal, Nb_normal, Mb_normal] = korning_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, r_hjul, g);
 
 %% Lagerkrafter calc
-[R_yx_broms, R_ix_broms, R_yz_broms, R_iz_broms, R_iy_broms]=F_lager(L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_max_ms, 2, 0, 0, Nb_broms, Nb_broms, -FB_broms); %Skicka in bromsinput
-[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel]=F_lager(L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel, Nb_accel, FD_accel); %Skicka in accelerationsinput
-[R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv]=F_lager(L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
+[R_yx_broms, R_ix_broms, R_yz_broms, R_iz_broms, R_iy_broms]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_max_ms, 2, 0, 0, Nb_broms, Nb_broms, -FB_broms); %Skicka in bromsinput
+[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel, Nb_accel, FD_accel); %Skicka in accelerationsinput
+[R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
 
 %% Snittstorhet calc
 N_points = 100;
-[y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br] = broms_snittstorheter(L, b_b, b_1, b_d, N, Nb_broms, m, a2, Cd, A_front, rho_luft, v_max_ms, r_hjul, r_broms);
+[y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br, Fb_br] = broms_snittstorheter(L, b_b, b_1, b_d, N, Nb_broms, m, a2, Cd, A_front, rho_luft, v_max_ms, r_hjul, r_broms);
 [y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mk_acc] = accel_snittstorheter(L, b_b, b_1, b_d, N, Nb_accel, m, a1, Cd, A_front, rho_luft, v_accel, r_hjul, r_drev);
 [y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N, V_bi_kurva, V_by_kurva, H_bi_kurva, H_by_kurva);
 
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-F_luft=1/2*Cd*rho_luft*v^2; % taken from F_lager.m
-F_k_accel=((m*a1+F_luft)*dh/2)/r_drev; % taken from F_lager.m
-[normal_br, vrid_br, skjuv_br] = broms_spanning(N_points, b_b, b_1, b_d, L, Nb_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(N_points, b_b, b_1, b_d, L, Nb_accel, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, F_k_accel, A, a, I, i, K, k);
-[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(N_points, b_b, b_1, b_d, L, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
+Fk_accel = Mk_acc / r_drev; 
+[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N_points, b_b, b_1, b_d, L, Nb_broms, Fb_br, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N_points, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
+[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N_points, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);

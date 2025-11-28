@@ -1,4 +1,4 @@
-function d = F_lager(L, b_1, d_h, r_b, r_d, b_b, b_d, a1, a2, Cd, rho_luft, v, styrVariabel, H_bi, H_by, V_bi, V_by, F_d)
+function [R_yx, R_ix, R_yz, R_iz, R_iy] = F_lager(m, L, b_1, d_h, r_b, r_d, b_b, b_d, a1, a2, Cd, rho_luft, v, styrVariabel, H_bi, H_by, V_bi, V_by, F_d)
 syms R_yx R_ix R_yz R_iz R_iy
 
 % Beräkna F_d och F_b respektive
@@ -44,4 +44,10 @@ Mz = L/2*(F_d/2-F_d/2)+(L/2-b_b)*(F_b-F_b)+(L/2-b_1)*(R_yx-R_ix)-(L/2-b_d)*F_k;
 eq1 = [ex ey ez Mx My Mz]  == [0 0 0 0 0 0];
 
 %Solve
-d = solve(eq1,[R_yx R_ix R_yz R_iz R_iy]);
+sol = solve(eq1,[R_yx R_ix R_yz R_iz R_iy]);
+
+R_yx = sol.R_yx;
+R_ix = sol.R_ix;
+R_yz = sol.R_yz;
+R_iz = sol.R_iz;
+R_iy = sol.R_iy;

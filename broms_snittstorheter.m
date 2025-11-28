@@ -1,4 +1,4 @@
-function [y_vec, Tyx, Tyz, N_kraft, Mx, My] = broms_snittstorheter(L, bb, b1, bd, N_points, Nb, m, a_broms, Cd, A, rho, v, r_hjul, r_broms)
+function [y_vec, Tyx, Tyz, N_kraft, Mx, My, Fb] = broms_snittstorheter(L, bb, b1, bd, N_points, Nb, m, a_broms, Cd, A, rho, v, r_hjul, r_broms)
 % BROMS_SNITTSTORHETER Beräknar snittkrafter och bromskraft internt
 %
 % Inputs:

@@ -7,9 +7,9 @@ F_D = F_L;
 F_C = m * v^2 / R; 
 
 % --- Totala normalkrafter per axel (som vid körning rakt fram) ---
-axelavstånd = df + db;
-Nf = (db * m * g - (h1 + h) * F_L) / axelavstånd;
-Nb = ((h1 + h) * F_L + df * m * g) / axelavstånd;
+axelavstand = df + db;
+Nf = (db * m * g - (h1 + h) * F_L) / axelavstand;
+Nb = ((h1 + h) * F_L + df * m * g) / axelavstand;
 
 % --- Normalkrafter för respektive hjul (V) ---
 % Fördelning av axel-normalkraft pga moment från centrifugalkraften
@@ -22,10 +22,10 @@ V_i = V_bi + V_fi;
 V_y = V_by + V_fy;
 % --- Horisontella sidokrafter på hjulen (H) ---
 % Fördelning av totala centrifugalkraften på fram- och bakaxel, sedan vidare till respektive hjul i proportion till deras normalkraft.
-H_fi = (V_fi / (V_fi + V_fy)) * (F_C * db / axelavstånd);
-H_fy = (V_fy / (V_fi + V_fy)) * (F_C * db / axelavstånd);
-H_bi = (V_bi / (V_bi + V_by)) * (F_C * df / axelavstånd);
-H_by = (V_by / (V_bi + V_by)) * (F_C * df / axelavstånd);
+H_fi = (V_fi / (V_fi + V_fy)) * (F_C * db / axelavstand);
+H_fy = (V_fy / (V_fi + V_fy)) * (F_C * db / axelavstand);
+H_bi = (V_bi / (V_bi + V_by)) * (F_C * df / axelavstand);
+H_by = (V_by / (V_bi + V_by)) * (F_C * df / axelavstand);
 
 H_i = H_bi + H_fi;
 H_y = H_by + H_fy;
