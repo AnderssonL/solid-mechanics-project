@@ -27,27 +27,23 @@ end
 
 %Kraftekvationer
 
-ex = F_d+R_ix+R_yx+F_k-2*F_b;
+ex = F_d + R_ix + R_yx + F_k-2 * F_b == 0;
 
-ey = H_bi+H_by-R_iy;
+ey = H_bi + H_by - R_iy == 0;
 
-ez = V_bi + V_by + R_iz+R_yz;
+ez = V_bi + V_by + R_iz + R_yz == 0;
 
 %Momentekvationer
-Mx = L/2*(V_bi-V_by)+d_h/2*(H_bi+H_by)+ (L/2-b_1)*(R_iz+R_yz);
+Mx = (L/2)*(V_bi-V_by) + (d_h/2)*(H_bi+H_by) + (L/2-b_1)*(R_iz-R_yz) == 0;
 
-My = -F_d * d_h/2-2*F_b*r_b +F_k*r_d;
+%My = (-F_d*d_h/2) - 2*F_b*r_b + F_k*r_d == 0;
 
-Mz = L/2*(F_d/2-F_d/2)+(L/2-b_b)*(F_b-F_b)+(L/2-b_1)*(R_yx-R_ix)-(L/2-b_d)*F_k;
+Mz = (L/2)*(F_d/2-F_d/2) + (L/2-b_b)*(F_b-F_b) + (L/2-b_1)*(R_yx-R_ix) + (L/2-b_d)*(-F_k) == 0;
 
-%Definera
-eq1 = [ex ey ez Mx My Mz]  == [0 0 0 0 0 0];
+sol = solve([ex,ey,ez,Mx,Mz],[R_yx, R_ix, R_yz, R_iz, R_iy]);
 
-%Solve
-sol = solve(eq1,[R_yx R_ix R_yz R_iz R_iy]);
-
-R_yx = sol.R_yx;
-R_ix = sol.R_ix;
-R_yz = sol.R_yz;
-R_iz = sol.R_iz;
-R_iy = sol.R_iy;
+R_yx = double(sol.R_yx);
+R_ix = double(sol.R_ix);
+R_yz = double(sol.R_yz);
+R_iz = double(sol.R_iz);
+R_iy = double(sol.R_iy);
