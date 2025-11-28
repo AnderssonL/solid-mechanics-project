@@ -73,9 +73,8 @@ N_points = 100;
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-% To add: M_b1 [is M_b1 == Mb?], M_k, H_i, V_i, V_y
 F_luft=1/2*Cd*rho_luft*v^2; % taken from F_lager.m
 F_k_accel=((m*a1+F_luft)*dh/2)/r_drev; % taken from F_lager.m
-[normal_br, vrid_br, skjuv_br] = broms_spanning(N_points, b_b, b_1, b_d, L, Nb_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner, this ended up being a bad idea
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(N_points, b_b, b_1, b_d, L, Nb_accel, 0, M_k, 0, 0, 0, R_ix_accel, 0, 0, F_k_accel, A, a, I, i, K, k);
-[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(N_points, b_b, b_1, b_d, L, 0, 0, 0, H_i, V_i, V_y, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
+[normal_br, vrid_br, skjuv_br] = broms_spanning(N_points, b_b, b_1, b_d, L, Nb_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(N_points, b_b, b_1, b_d, L, Nb_accel, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, F_k_accel, A, a, I, i, K, k);
+[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(N_points, b_b, b_1, b_d, L, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
