@@ -80,32 +80,34 @@ Fk_accel = Mk_acc / r_drev;
 
 %% Plotting
 
-% Nominella spänningar
 figure(1)
+tiledlayout(3,1)
+
+nexttile
 hold on
-plot(y_vector, abs(normal_br./(10^6)))
-plot(y_vector, abs(normal_acc./(10^6)))
-plot(y_vector, abs(normal_kurv./(10^6)))
+plot(y_vector, abs(normal_br./1e6))
+plot(y_vector, abs(normal_acc./1e6))
+plot(y_vector, abs(normal_kurv./1e6))
 title("Maximal normalspänning")
 legend("Bromsning", "Acceleration", "Kurvtagning")
 xlabel("Längd [m]")
 ylabel("Spänning [MPa]")
 
-figure(2)
+nexttile
 hold on
-plot(y_vector, abs(vrid_br./(10^6)))
-plot(y_vector, abs(vrid_acc./(10^6)))
-plot(y_vector, abs(vrid_kurv./(10^6)))
+plot(y_vector, abs(vrid_br./1e6))
+plot(y_vector, abs(vrid_acc./1e6))
+plot(y_vector, abs(vrid_kurv./1e6))
 title("Maximal vridspänning")
 legend("Bromsning", "Acceleration", "Kurvtagning")
 xlabel("Längd [m]")
 ylabel("Spänning [MPa]")
 
-figure(3)
+nexttile
 hold on
-plot(y_vector, abs(skjuv_br./(10^6)))
-plot(y_vector, abs(skjuv_acc./(10^6)))
-plot(y_vector, abs(skjuv_kurv./(10^6)))
+plot(y_vector, abs(skjuv_br./1e6))
+plot(y_vector, abs(skjuv_acc./1e6))
+plot(y_vector, abs(skjuv_kurv./1e6))
 title("Maximal skjuvspänning")
 legend("Bromsning", "Acceleration", "Kurvtagning")
 xlabel("Längd [m]")
