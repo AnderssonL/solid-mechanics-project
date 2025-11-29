@@ -36,8 +36,6 @@ D = 0.1; % axel diameter (tjockare del) Bestäm!
 d = 0.6*D; % axel diameter (tunnare del)
 R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
-N_points = 100;
-y_vector = linspace(0, L, N_points);
 
 b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
 b_b = 0.08;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
@@ -53,6 +51,7 @@ i = (pi*d^4)/32; % Areatröghetsmoment x och z (tunnare del)
 
 h = 0.001; % tidssteg för iteration
 N = L/h; % antalg iterationer
+y_vector = linspace(0, L, N);
 
 %% Hjulkrafter calc
 [FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
@@ -74,41 +73,105 @@ N = L/h; % antalg iterationer
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
 Fk_accel = Mk_acc / r_drev; 
-[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N_points, b_b, b_1, b_d, L, Nb_broms, Fb_br, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N_points, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
-[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N_points, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
+[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, Fb_br, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
+[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
 %% Plotting
 
+% snittstorheter
 figure(1)
-tiledlayout(3,1)
+tiledlayout(3,2)
+
+% bromsning – krafter (vänster)
+T_hyp_br = sqrt(Tyx_br.^2 + Tyz_br.^2);
+nexttile
+plot(y_br, T_hyp_br/1000); hold on
+plot(y_br, N_br/1000)
+title("Bromsning – Krafter")
+legend("T_{hyp}","N")
+xlabel("Längd [m]")
+ylabel("Kraft [kN]")
+
+% bromsning – moment (höger)
+nexttile
+plot(y_br, Mx_br/1000); hold on
+plot(y_br, My_br/1000)
+title("Bromsning – Moment")
+legend("Mx","My")
+xlabel("Längd [m]")
+ylabel("Moment [kN·m]")
+
+% acceleration – krafter (vänster)
+T_hyp_acc = sqrt(Tyx_acc.^2 + Tyz_acc.^2);
+nexttile
+plot(y_acc, T_hyp_acc/1000); hold on
+plot(y_acc, N_acc/1000)
+title("Acceleration – Krafter")
+legend("T_{hyp}","N")
+xlabel("Längd [m]")
+ylabel("Kraft [kN]")
+
+% acceleration – moment (höger)
+nexttile
+plot(y_acc, Mx_acc/1000); hold on
+plot(y_acc, My_acc/1000)
+plot(y_acc, Mk_acc/1000)
+title("Acceleration – Moment")
+legend("Mx","My","Mk")
+xlabel("Längd [m]")
+ylabel("Moment [kN·m]")
+
+% kurvtagning – krafter (vänster)
+T_hyp_kurv = sqrt(Tyx_kurv.^2 + Tyz_kurv.^2);
+nexttile
+plot(y_kurv, T_hyp_kurv/1000); hold on
+plot(y_kurv, N_kurv/1000)
+title("Kurvtagning – Krafter")
+legend("T_{hyp}","N")
+xlabel("Längd [m]")
+ylabel("Kraft [kN]")
+
+% kurvtagning – moment (höger)
+nexttile
+plot(y_kurv, Mx_kurv/1000); hold on
+plot(y_kurv, My_kurv/1000)
+title("Kurvtagning – Moment")
+legend("Mx","My")
+xlabel("Längd [m]")
+ylabel("Moment [kN·m]")
+
+
+% nominella spänningar
+figure(2)
+tiledlayout(2,2)
 
 nexttile
 hold on
 plot(y_vector, abs(normal_br./1e6))
-plot(y_vector, abs(normal_acc./1e6))
-plot(y_vector, abs(normal_kurv./1e6))
-title("Maximal normalspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
-xlabel("Längd [m]")
-ylabel("Spänning [MPa]")
-
-nexttile
-hold on
 plot(y_vector, abs(vrid_br./1e6))
-plot(y_vector, abs(vrid_acc./1e6))
-plot(y_vector, abs(vrid_kurv./1e6))
-title("Maximal vridspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
+plot(y_vector, abs(skjuv_br./1e6))
+title("Bromsning")
+legend("Normal", "Vrid", "Skjuv")
 xlabel("Längd [m]")
 ylabel("Spänning [MPa]")
 
 nexttile
 hold on
-plot(y_vector, abs(skjuv_br./1e6))
+plot(y_vector, abs(normal_acc./1e6))
+plot(y_vector, abs(vrid_acc./1e6))
 plot(y_vector, abs(skjuv_acc./1e6))
+title("Acceleration")
+legend("Normal", "Vrid", "Skjuv")
+xlabel("Längd [m]")
+ylabel("Spänning [MPa]")
+
+nexttile
+hold on
+plot(y_vector, abs(normal_kurv./1e6))
+plot(y_vector, abs(vrid_kurv./1e6))
 plot(y_vector, abs(skjuv_kurv./1e6))
-title("Maximal skjuvspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
+title("Kurvtagning")
+legend("Normal", "Vrid", "Skjuv")
 xlabel("Längd [m]")
 ylabel("Spänning [MPa]")
