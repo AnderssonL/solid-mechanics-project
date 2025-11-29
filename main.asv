@@ -36,9 +36,7 @@ D = 0.1; % axel diameter (tjockare del) Bestäm!
 d = 0.6*D; % axel diameter (tunnare del)
 R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
-N_points = 100;
-y_vector = linspace(0, L, N_points);
-
+y_length = linespace(0, L, N)
 b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
 b_b = 0.08;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
 b_d = 0.25;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
@@ -66,6 +64,7 @@ N = L/h; % antalg iterationer
 [R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
 
 %% Snittstorhet calc
+N_points = 100;
 [y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br, Fb_br] = broms_snittstorheter(L, b_b, b_1, b_d, N, Nb_broms, m, a2, Cd, A_front, rho_luft, v_max_ms, r_hjul, r_broms);
 [y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mk_acc] = accel_snittstorheter(L, b_b, b_1, b_d, N, Nb_accel, m, a1, Cd, A_front, rho_luft, v_accel, r_hjul, r_drev);
 [y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N, V_bi_kurva, V_by_kurva, H_bi_kurva, H_by_kurva);
@@ -81,32 +80,3 @@ Fk_accel = Mk_acc / r_drev;
 %% Plotting
 
 % Nominella spänningar
-figure(1)
-hold on
-plot(y_vector, abs(normal_br./(10^6)))
-plot(y_vector, abs(normal_acc./(10^6)))
-plot(y_vector, abs(normal_kurv./(10^6)))
-title("Maximal normalspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
-xlabel("Längd [m]")
-ylabel("Spänning [MPa]")
-
-figure(2)
-hold on
-plot(y_vector, abs(vrid_br./(10^6)))
-plot(y_vector, abs(vrid_acc./(10^6)))
-plot(y_vector, abs(vrid_kurv./(10^6)))
-title("Maximal vridspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
-xlabel("Längd [m]")
-ylabel("Spänning [MPa]")
-
-figure(3)
-hold on
-plot(y_vector, abs(skjuv_br./(10^6)))
-plot(y_vector, abs(skjuv_acc./(10^6)))
-plot(y_vector, abs(skjuv_kurv./(10^6)))
-title("Maximal skjuvspänning")
-legend("Bromsning", "Acceleration", "Kurvtagning")
-xlabel("Längd [m]")
-ylabel("Spänning [MPa]")
