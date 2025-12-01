@@ -1,0 +1,48 @@
+function [spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = spanningskonc(normal_kurv, vrid_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N)
+    
+    %% Drev x1
+    % hitta nominell spänning vid drevets position
+    idx_drev = round(N*(b_d/L));
+    nom_drev_normal = normal_kurv(:, idx_drev);
+    nom_drev_vrid   = vrid_kurv(:, idx_drev);
+
+    max_drev_normal = nom_drev_normal * K_drev_normal;
+    max_drev_vrid   = nom_drev_vrid * K_drev_vrid;
+
+    spannkonc_drev = [max_drev_normal; max_drev_vrid];
+
+    %% Broms x2
+    % hitta nominell spänning vid bromsens position
+    idx_broms1= round(N*(b_b/L));
+    idx_broms2= round(N*((L-b_b)/L));
+
+    nom_broms1_normal = normal_kurv(:, idx_broms1);
+    nom_broms2_normal = normal_kurv(:, idx_broms2);
+    nom_broms1_vrid   = vrid_kurv(:, idx_broms1);
+    nom_broms2_vrid   = vrid_kurv(:, idx_broms2);
+
+    max_broms1_normal = nom_broms1_normal * K_broms_normal;
+    max_broms1_vrid   = nom_broms1_vrid * K_broms_vrid;
+    max_broms2_normal = nom_broms2_normal * K_broms_normal;
+    max_broms2_vrid   = nom_broms2_vrid * K_broms_vrid;
+
+    spannkonc_broms1 = [max_broms1_normal; max_broms1_vrid];
+    spannkonc_broms2 = [max_broms2_normal; max_broms2_vrid];
+    %% Lager x2
+    % hitta nominell spänning vid lagrets position
+    idx_lager1= round(N*(b_1/L));
+    idx_lager2= round(N*((L-b_1)/L));
+
+    nom_lager1_normal = normal_kurv(:, idx_lager1);
+    nom_lager2_normal = normal_kurv(:, idx_lager2);
+    nom_lager1_vrid   = vrid_kurv(:, idx_lager1);
+    nom_lager2_vrid   = vrid_kurv(:, idx_lager2);
+
+    max_lager1_normal = nom_lager1_normal * K_lager_normal;
+    max_lager1_vrid   = nom_lager1_vrid * K_lager_vrid;
+    max_lager2_normal = nom_lager2_normal * K_lager_normal;
+    max_lager2_vrid   = nom_lager2_vrid * K_lager_vrid;
+
+    spannkonc_lager1 = [max_lager1_normal; max_lager1_vrid];
+    spannkonc_lager2 = [max_lager2_normal; max_lager2_vrid];
+end

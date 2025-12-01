@@ -11,8 +11,9 @@ A_front = 0.5;      % Fordonets frontarea [m^2]
 Cd = 0.3;           % Luftmotståndskoefficient (c i PM)
 dh = 0.3;           % Hjuldiameter [m] (240-400 mm)
 r_hjul = dh / 2;    % Hjulradie [m]
-r_drev = 0.05;      % Drevets radie [m] 
-r_broms = 0.09;     % Bromsskivans radie [m]
+r_drev = 0.3*dh;      % Drevets radie [m] 
+r_broms = 0.2*dh;     % Bromsskivans radie [m]
+kalradie = 4e-3;   % Kälradie [m]
 
 
 a1 = 6;             % Acceleration i accelerationslastfallet [m/s^2]
@@ -77,6 +78,25 @@ Fk_accel = Mk_acc / r_drev;
 [normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
 [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
+
+%% Lokala spänningskonc calc (för kurvtagning)
+% Hjälpfunktion för att bestämma formfaktorer (se tabell 32.4 i formelsamlingen)
+formfaktorer_help(d, D, kalradie, r_drev, r_broms);
+
+% givet tabellen:
+K_drev_normal  = 2.70;
+K_drev_vrid    = 1.85;
+
+K_broms_normal = 2.35;
+K_broms_vrid   = 1.65;
+
+K_lager_normal = 2.20;
+K_lager_vrid   = 1.60;
+
+% beräkna lokala spänningskonc för drev (1 st), broms (2 st), lager (2 st)
+% ex: col1 = broms1, col2 = broms2, row1 = normalspänning, row2 = vridspänning
+[spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = spanningskonc(normal_kurv, vrid_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
+
 %% Plotting
 
 % snittstorheter
@@ -116,9 +136,8 @@ ylabel("Kraft [kN]")
 nexttile
 plot(y_acc, Mx_acc/1000); hold on
 plot(y_acc, My_acc/1000)
-plot(y_acc, Mk_acc/1000)
 title("Acceleration – Moment")
-legend("Mx","My","Mk")
+legend("Mx","My")
 xlabel("Längd [m]")
 ylabel("Moment [kN·m]")
 
@@ -144,7 +163,7 @@ ylabel("Moment [kN·m]")
 
 % nominella spänningar
 figure(2)
-tiledlayout(2,2)
+tiledlayout(3,1)
 
 nexttile
 hold on
