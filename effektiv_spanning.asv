@@ -1,5 +1,0 @@
-function [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2] = effektiv_spanning(spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2)
-    % von mises formel
-    spanneff_drev = sqrt(spannkonc_drev(1, 1)^2)
-
-end
