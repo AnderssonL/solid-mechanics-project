@@ -95,7 +95,10 @@ K_lager_vrid   = 1.60;
 
 % beräkna lokala spänningskonc för drev (1 st), broms (2 st), lager (2 st)
 % ex: col1 = broms1, col2 = broms2, row1 = normalspänning, row2 = vridspänning
-[spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = spanningskonc(normal_kurv, vrid_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
+[spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = koncentrerad_spanning(normal_kurv, vrid_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
+
+% beräkna effektivspänning med von mises för 1D balk
+[spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2] = effektiv_spanning(spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2);
 
 %% Plotting
 
