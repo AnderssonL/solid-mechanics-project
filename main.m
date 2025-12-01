@@ -25,6 +25,8 @@ v_kurva_ms = gamma * v_max_ms; % Hastighet i kurvan [m/s]
 v_accel = 1;        % Sätt en låg hastighet [m/s]
 R_kurva = 10;       % Kurvradie [m] (5-15 m)
 
+n_s = 2.5;          % Säkerhetsfaktor mot plastisk deformation 
+n_u = 2.0;          % Säkerhetsfaktor mot utmattning
 
 %% World parameters
 g = 9.82;           % Tyngdacceleration [m/s^2]
@@ -99,6 +101,15 @@ K_lager_vrid   = 1.60;
 
 % beräkna effektivspänning med von mises för 1D balk
 [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2] = effektiv_spanning(spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2);
+spanneff = [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2];
+
+% beräkna den sträckgräns som maximala effektivspänning samt säkerhetsfaktorn n_s kräver
+
+[~, idx_max_spanneff] = max(spanneff);
+strackgrans = spanneff(idx_max_spanneff) * n_s;
+
+disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans);
+
 
 %% Plotting
 
