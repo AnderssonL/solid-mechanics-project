@@ -114,10 +114,9 @@ spanneff = [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, sp
 
 [~, idx_max_spanneff] = max(spanneff);
 strackgrans = spanneff(idx_max_spanneff) * n_s;
-
+effektiv_spanning_nominal_max = max([effektiv_spanning_br, effektiv_spanning_acc, effektiv_spanning_kurv]);
 disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
-
-disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * max([effektiv_spanning_br, effektiv_spanning_acc, effektiv_spanning_kurv])/1000000 + " MPa");
+disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * effektiv_spanning_nominal_max/1000000 + " MPa");
 
 %% Plotting
 
