@@ -3,7 +3,7 @@
 
 m = 150;            % Fordonets vikt inkl. förare [kg]
 df = 0.8;           % Avstånd framaxel till tyngdpunkt [m] (600-1000 mm)
-db = 0.3;           % Avstånd bakaxel till tyngdpunkt [m] (200-400 mm)
+db = 0.3;           % Avstånd bakaxel till ty   ngdpunkt [m] (200-400 mm)
 hTP = 0.45;           % Tyngdpunktens vertikala position [m] (30-60 cm)
 hFL = 0.2;           % Avstånd tyngdpunkt till luftmotståndets verkningslinje [m] (15-25 cm)
 h_luft = hTP+ hFL;    % Höjd från marken till luftmotståndets angreppspunkt [m]
@@ -80,6 +80,13 @@ Fk_accel = Mk_acc / r_drev;
 [normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
 [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
+effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vrid_br, skjuv_br));
+effektiv_spanning_acc = max(Effektiv_spanning_nominal(normal_acc, vrid_acc, skjuv_acc));
+effektiv_spanning_kurv = max(Effektiv_spanning_nominal(normal_kurv, vrid_kurv, skjuv_kurv));
+
+disp("Effektivspänning bromsning " + effektiv_spanning_br/1000000 + "MPa");
+disp("Effektivspänning acceleration " + effektiv_spanning_acc/1000000 + "MPa");
+disp("Effektivspänning kurvtagning " + effektiv_spanning_kurv/1000000 + "MPa");
 
 %% Lokala spänningskonc calc (för kurvtagning)
 % Hjälpfunktion för att bestämma formfaktorer (se tabell 32.4 i formelsamlingen)
@@ -108,8 +115,9 @@ spanneff = [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, sp
 [~, idx_max_spanneff] = max(spanneff);
 strackgrans = spanneff(idx_max_spanneff) * n_s;
 
-disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans);
+disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
 
+disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * max([effektiv_spanning_br, effektiv_spanning_acc, effektiv_spanning_kurv])/1000000 + " MPa");
 
 %% Plotting
 
