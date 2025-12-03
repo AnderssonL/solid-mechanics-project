@@ -80,9 +80,8 @@ y_vector = linspace(0, L, N);
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-Fk_accel = Mk_acc / r_drev; 
 [normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, Fb_br, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
+[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_acc, A, a, I, i, K, k);
 [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
 effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vrid_br, skjuv_br));
