@@ -1,4 +1,4 @@
-function [R_yx, R_ix, R_yz, R_iz, R_iy] = F_lager(m, L, b_1, d_h, r_b, r_d, b_b, b_d, a1, a2, Cd, rho_luft, v, styrVariabel, H_bi, H_by, V_bi, V_by, F_d)
+function [R_yx, R_ix, R_yz, R_iz, R_iy, F_k, F_b] = F_lager(m, L, b_1, d_h, r_b, r_d, b_b, b_d, a1, a2, Cd, rho_luft, v, styrVariabel, H_bi, H_by, V_bi, V_by, F_d)
 syms R_yx R_ix R_yz R_iz R_iy
 
 % Beräkna F_d och F_b respektive
@@ -46,4 +46,5 @@ R_yx = double(sol.R_yx);
 R_ix = double(sol.R_ix);
 R_yz = double(sol.R_yz);
 R_iz = double(sol.R_iz);
+
 R_iy = double(sol.R_iy);
