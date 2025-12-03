@@ -7,7 +7,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     N_vec = zeros(1, N_points);   
     Mx  = zeros(1, N_points); 
     My  = zeros(1, N_points); 
-    Mz  = zeros(1, N_points); 
+    Mz  = F_k * r_hjul; %zeros(1, N_points); 
 
     % --- Mappa om input-namn till namnen i din loop ---
     Riz = R_iz;
@@ -82,59 +82,60 @@ for i = 1:N_points
 y = y_vec(i);
 
 if y >= 0 && y < bb
-    Tyz = -Vbi 
-    Tyx = -F_driv/2;
+    Tyz_int = -Vbi;
+    Tyx_int = -F_driv/2;
     N = Hbi;
-    Mx = Tyz * y - Mbi;
-    My = M_D; 
-    Mz = Tyx * y;
+    Mx_int = Tyz_int * y - Mbi;
+    My_int = M_D; 
+    Mz_int = Tyx_int * y;
 end
 if y >= bb && y < b1
-    Tyz = -Vbi 
-    Tyx = -F_driv/2 + F_broms;
+    Tyz_int = -Vbi;
+    Tyx_int = -F_driv/2 + F_broms;
     N = Hbi;
-    Mx = Tyz * y - Mbi;
-    My = M_D - Mb; 
-    Mz = Tyx * y - Fb * bb;
+    Mx_int = Tyz_int * y - Mbi;
+    My_int = M_D - Mb; 
+    Mz_int = Tyx_int * y - Fb * bb;
 end
 if y >= b1 && y < bd
-    Tyz = -Vbi - Riz;
-    Tyx = -F_driv/2 + F_broms - Rix;
+    Tyz_int = -Vbi - Riz;
+    Tyx_int = -F_driv/2 + F_broms - Rix;
     N = Hbi - Riy;
-    Mx = Tyz * y - Mbi + Riz * b1;
-    My = M_D - Mb;
-    Mz = Tyx * y - Fb * bb + Rix * b1;
+    Mx_int = Tyz_int * y - Mbi + Riz * b1;
+    My_int = M_D - Mb;
+    Mz_int = Tyx_int * y - Fb * bb + Rix * b1;
 end
 if y >= bd && y < (L-b1)
-    Tyz = -Vbi - Riz;
-    Tyx = -F_driv/2 + F_broms - Rix - Fk;
+    Tyz_int = -Vbi - Riz;
+    Tyx_int = -F_driv/2 + F_broms - Rix - Fk;
     N = Hbi - Riy;
-    Mx = Tyz * y - Mbi + Riz * b1;
-    My = M_D - Mb + Mk;
-    Mz = Tyx * y - Fb * bb + Rix * b1 + Fk * bd;
+    Mx_int = Tyz_int * y - Mbi + Riz * b1;
+    My_int = M_D - Mb + Mk;
+    Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd;
 end
 if y >= (L-b1) && y < (L-bb)
-    Tyz = -Vbi - Riz - Ryz;
-    Tyx = -F_driv/2 + F_broms - Rix - Fk- Ryx;
+    Tyz_int = -Vbi - Riz - Ryz;
+    Tyx_int = -F_driv/2 + F_broms - Rix - Fk- Ryx;
     N = Hbi - Riy;
-    Mx = Tyz * y - Mbi + Riz * b1 + Ryz * (L-b1);
-    My = M_D - Mb + Mk;
-    Mz = Tyx * y - Fb * bb + Rix * b1 + Fk * bd + Ryx * (L-b1);
+    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
+    My_int = M_D - Mb + Mk;
+    Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
 if y >= (L-bb) && y < L
-    Tyz = -Vbi - Riz - Ryz;
-    Tyx = -F_driv/2 + 2* F_broms - Rix - Fk- Ryx;
+    Tyz_int = -Vbi - Riz - Ryz;
+    Tyx_int = -F_driv/2 + 2* F_broms - Rix - Fk- Ryx;
     N = Hbi - Riy;
-    Mx = Tyz * y - Mbi + Riz * b1 + Ryz * (L-b1);
-    My = M_D - 2*Mb + Mk;
-    Mz = Tyx * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1);
+    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
+    My_int = M_D - 2*Mb + Mk;
+    Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
 
-Tyz(i) = Tyz;
-Tyx(i) = Tyx;
+Tyz(i) = Tyz_int;
+Tyx(i) = Tyx_int;
 N_vec(i) = N; % Store the normal force for the current iteration
-Mx(i) = Mx;
-My(i) = My; % Store the moment about the y-axis for the current iteration
-Mz(i) = Mz; % Store the moment about the z-axis for the current iteration
+Mx(i) = Mx_int;
+My(i) = My_int; % Store the moment about the y-axis for the current iteration
+%Mz(i) = Mz_int; % Store the moment about the z-axis for the current iteration
 end
+
 end

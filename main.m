@@ -73,15 +73,15 @@ y_vector = linspace(0, L, N);
 %[y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv] = kurvtagning_snittstorheter(L, b_b, b_1, b_d, N, V_bi_kurva, V_by_kurva, H_bi_kurva, H_by_kurva);
 
 %% Snittstorhet calc
-[y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br, Mz_br] = anpassad_snittstorheter(2, L, b_b, b_1, b_d, N, r_hjul, r_drev, r_broms, Nb_broms/2, 0, R_ix_broms, R_iy_broms, R_iz_broms, R_yx_broms, R_yz_broms, 0, Fb_br); % bromsning
-[y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mz_acc] = anpassad_snittstorheter(1, L, b_b, b_1, b_d, N, r_hjul, r_drev, r_broms, Nb_accel/2, 0, R_ix_accel, R_iy_accel, R_iz_accel, R_yx_accel, R_yz_accel, Fk_acc, 0);
+[y_br, Tyx_br, Tyz_br, N_br, Mx_br, My_br, Mz_br] = anpassad_snittstorheter(2, L, b_b, b_1, b_d, N, r_hjul, r_drev, r_broms, Nb_broms/2, 0, R_ix_broms, R_iy_broms, R_iz_broms, R_yx_broms, R_yz_broms, 0, FB_broms); % bromsning
+[y_acc, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mz_acc] = anpassad_snittstorheter(1, L, b_b, b_1, b_d, N, r_hjul, r_drev, r_broms, Nb_accel/2, 0, R_ix_accel, R_iy_accel, R_iz_accel, R_yx_accel, R_yz_accel, FD_accel, 0);
 [y_kurv, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv, Mz_kurv] = anpassad_snittstorheter(3, L, b_b, b_1, b_d, N, r_hjul, r_drev, r_broms, V_bi_kurva, H_bi_kurva, R_ix_kurv, R_iy_kurv, R_iz_kurv, R_yx_kurv, R_yz_kurv, Fk_kurv, 0);
 
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, Fb_br, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mk_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_acc, A, a, I, i, K, k);
+[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, FB_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mz_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
 [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
 effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vrid_br, skjuv_br));
