@@ -7,7 +7,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     N_vec = zeros(1, N_points);   
     Mx  = zeros(1, N_points); 
     My  = zeros(1, N_points); 
-    Mz  = F_k * r_hjul; %zeros(1, N_points); 
+    Mz  = zeros(1, N_points); 
 
     % --- Mappa om input-namn till namnen i din loop ---
     Riz = R_iz;
@@ -140,3 +140,4 @@ end
 
 
 end
+
