@@ -17,7 +17,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     Ryx = R_yx;
     
     % Mbi är momentet vid balkens ände (y=0). Antas noll för fritt roterande hjulaxel-ände.
-    Mbi = 0; 
+    Mbi = Hbi * r_hjul; 
 
     % --- Definiera last-variabler beroende på fall ---
     % Vi måste räkna ut vad F_driv, M_D, Mk, etc. ska vara
@@ -137,5 +137,6 @@ Mx(i) = Mx_int;
 My(i) = My_int; % Store the moment about the y-axis for the current iteration
 %Mz(i) = Mz_int; % Store the moment about the z-axis for the current iteration
 end
+
 
 end
