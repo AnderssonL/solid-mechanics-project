@@ -164,7 +164,7 @@ plot(y_acc, Mx_acc/1000); hold on
 plot(y_acc, My_acc/1000)
 plot(y_acc, Mz_acc/1000)
 title("Acceleration – Moment")
-legend("Mx","My", "Mz)
+legend("Mx","My", "Mz")
 xlabel("Längd [m]")
 ylabel("Moment [kN·m]")
 
@@ -184,7 +184,7 @@ plot(y_kurv, Mx_kurv/1000); hold on
 plot(y_kurv, My_kurv/1000)
 plot(y_kurv, Mz_kurv/1000)
 title("Kurvtagning – Moment")
-legend("Mx","My", "Mz)
+legend("Mx","My", "Mz")
 xlabel("Längd [m]")
 ylabel("Moment [kN·m]")
 
