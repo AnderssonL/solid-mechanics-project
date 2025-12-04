@@ -135,7 +135,7 @@ Tyx(i) = Tyx_int;
 N_vec(i) = N; % Store the normal force for the current iteration
 Mx(i) = Mx_int;
 My(i) = My_int; % Store the moment about the y-axis for the current iteration
-%Mz(i) = Mz_int; % Store the moment about the z-axis for the current iteration
+Mz(i) = Mz_int; % Store the moment about the z-axis for the current iteration
 end
 
 
