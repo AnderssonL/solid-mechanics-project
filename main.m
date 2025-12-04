@@ -144,7 +144,7 @@ plot(y_br, Mx_br/1000); hold on
 plot(y_br, My_br/1000)
 plot(y_br, Mz_br/1000)
 title("Bromsning – Moment")
-legend("Mx","My", "Mz)
+legend("Mx","My", "Mz")
 xlabel("Längd [m]")
 ylabel("Moment [kN·m]")
 
