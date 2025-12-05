@@ -12,6 +12,6 @@
 %
 function effektiv_spanning = Effective_spanning_nominal(normal, vrid, skjuv)
 
-effektiv_spanning = sqrt(normal.^2 + 3*vrid.^2 + 3*skjuv.^2);
+effektiv_spanning = sqrt(normal.^2 + 3*(vrid+skjuv).^2);% + 3*skjuv.^2);
 
 end
