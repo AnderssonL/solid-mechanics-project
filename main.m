@@ -1,3 +1,4 @@
+close all;
 %% Vehicle parameters
 % Värdena är tagna från "Typiska värden" i Tabell 2 i projektbeskrivningen.
 
@@ -123,102 +124,118 @@ disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering ä
 disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * effektiv_spanning_nominal_max/1000000 + " MPa");
 
 %% Plotting
+% Skapa figur
+figure('Name', 'Snittstorheter Sammanställning', 'NumberTitle', 'off', 'WindowState', 'maximized');
 
-% snittstorheter
-figure(1)
-tiledlayout(3,2)
+% Layout setup
+t = tiledlayout(3, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+xlabel(t, 'Längd [m]', 'FontSize', 12, 'FontWeight', 'bold');
+title(t, 'Sammanställning av snittstorheter och spänningar', 'FontSize', 14, 'FontWeight', 'bold');
 
-% bromsning – krafter (vänster)
-T_hyp_br = sqrt(Tyx_br.^2 + Tyz_br.^2);
+% Inställningar
+lw = 1.5; % Sätt linjetjocklek en gång för att enkelt kunna ändra
+
+% --- RAD 1: BROMSNING ---
+% 1. Krafter
 nexttile
-plot(y_br, T_hyp_br/1000); hold on
-plot(y_br, N_br/1000)
-title("Bromsning – Krafter")
-legend("T_{hyp}","N")
-xlabel("Längd [m]")
-ylabel("Kraft [kN]")
+hold on; grid on; box on;
+T_res_br = sqrt(Tyx_br.^2 + Tyz_br.^2); 
+plot(y_br, T_res_br/1000, 'LineWidth', lw); 
+plot(y_br, N_br/1000, 'LineWidth', lw);
+title("Bromsning – Krafter");
+ylabel("Kraft [kN]");
+legend("T_{res} (Tvärkraft)", "N (Normalkraft)", 'Location', 'best');
+xlim([0 L]);
 
-% bromsning – moment (höger)
+% 2. Moment
 nexttile
-plot(y_br, Mx_br/1000); hold on
-plot(y_br, My_br/1000)
-plot(y_br, Mz_br/1000)
-title("Bromsning – Moment")
-legend("Mx","My", "Mz")
-xlabel("Längd [m]")
-ylabel("Moment [kN·m]")
+hold on; grid on; box on;
+plot(y_br, Mx_br, 'LineWidth', lw);
+plot(y_br, My_br, 'LineWidth', lw);
+plot(y_br, Mz_br, 'LineWidth', lw);
+title("Bromsning – Moment");
+ylabel("Moment [Nm]");
+legend("Mx (Böj)", "My (Vrid)", "Mz (Böj)", 'Location', 'best');
+xlim([0 L]);
 
-% acceleration – krafter (vänster)
-T_hyp_acc = sqrt(Tyx_acc.^2 + Tyz_acc.^2);
+% 3. Spänning
 nexttile
-plot(y_acc, T_hyp_acc/1000); hold on
-plot(y_acc, N_acc/1000)
-title("Acceleration – Krafter")
-legend("T_{hyp}","N")
-xlabel("Längd [m]")
-ylabel("Kraft [kN]")
-
-% acceleration – moment (höger)
-nexttile
-plot(y_acc, Mx_acc/1000); hold on
-plot(y_acc, My_acc/1000)
-plot(y_acc, Mz_acc/1000)
-title("Acceleration – Moment")
-legend("Mx","My", "Mz")
-xlabel("Längd [m]")
-ylabel("Moment [kN·m]")
-
-% kurvtagning – krafter (vänster)
-T_hyp_kurv = sqrt(Tyx_kurv.^2 + Tyz_kurv.^2);
-nexttile
-plot(y_kurv, T_hyp_kurv/1000); hold on
-plot(y_kurv, N_kurv/1000)
-title("Kurvtagning – Krafter")
-legend("T_{hyp}","N")
-xlabel("Längd [m]")
-ylabel("Kraft [kN]")
-
-% kurvtagning – moment (höger)
-nexttile
-plot(y_kurv, Mx_kurv/1000); hold on
-plot(y_kurv, My_kurv/1000)
-plot(y_kurv, Mz_kurv/1000)
-title("Kurvtagning – Moment")
-legend("Mx","My", "Mz")
-xlabel("Längd [m]")
-ylabel("Moment [kN·m]")
-
-
-% nominella spänningar
-figure(2)
-tiledlayout(3,1)
-
-nexttile
-hold on
-plot(y_vector, abs(normal_br./1e6))
-plot(y_vector, abs(vrid_br./1e6))
-plot(y_vector, abs(skjuv_br./1e6))
-title("Bromsning")
-legend("Normal", "Vrid", "Skjuv")
-xlabel("Längd [m]")
+hold on; grid on; box on;
+plot(y_vector, abs(normal_br./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vrid_br./1e6), 'LineWidth', lw)
+plot(y_vector, abs(skjuv_br./1e6), 'LineWidth', lw)
+title("Bromsning – Spänning")
 ylabel("Spänning [MPa]")
+legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+xlim([0 L]);
 
+% --- RAD 2: ACCELERATION ---
+% 4. Krafter
 nexttile
-hold on
-plot(y_vector, abs(normal_acc./1e6))
-plot(y_vector, abs(vrid_acc./1e6))
-plot(y_vector, abs(skjuv_acc./1e6))
-title("Acceleration")
-legend("Normal", "Vrid", "Skjuv")
-xlabel("Längd [m]")
-ylabel("Spänning [MPa]")
+hold on; grid on; box on;
+T_res_acc = sqrt(Tyx_acc.^2 + Tyz_acc.^2);
+plot(y_acc, T_res_acc/1000, 'LineWidth', lw);
+plot(y_acc, N_acc/1000, 'LineWidth', lw);
+title("Acceleration – Krafter");
+ylabel("Kraft [kN]");
+legend("T_{res}", "N", 'Location', 'best');
+xlim([0 L]);
 
+% 5. Moment
 nexttile
-hold on
-plot(y_vector, abs(normal_kurv./1e6))
-plot(y_vector, abs(vrid_kurv./1e6))
-plot(y_vector, abs(skjuv_kurv./1e6))
-title("Kurvtagning")
-legend("Normal", "Vrid", "Skjuv")
-xlabel("Längd [m]")
+hold on; grid on; box on;
+plot(y_acc, Mx_acc, 'LineWidth', lw);
+plot(y_acc, My_acc, 'LineWidth', lw);
+plot(y_acc, Mz_acc, 'LineWidth', lw);
+title("Acceleration – Moment");
+ylabel("Moment [Nm]");
+legend("Mx", "My", "Mz", 'Location', 'best');
+xlim([0 L]);
+
+% 6. Spänning (Flyttad hit för att matcha rad 2)
+nexttile
+hold on; grid on; box on;
+plot(y_vector, abs(normal_acc./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vrid_acc./1e6), 'LineWidth', lw)
+plot(y_vector, abs(skjuv_acc./1e6), 'LineWidth', lw)
+title("Acceleration – Spänning")
 ylabel("Spänning [MPa]")
+legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+xlim([0 L]);
+
+% --- RAD 3: KURVTAGNING ---
+% 7. Krafter
+nexttile
+hold on; grid on; box on;
+T_res_kurv = sqrt(Tyx_kurv.^2 + Tyz_kurv.^2);
+plot(y_kurv, T_res_kurv/1000, 'LineWidth', lw);
+plot(y_kurv, N_kurv/1000, 'LineWidth', lw);
+title("Kurvtagning – Krafter");
+ylabel("Kraft [kN]");
+legend("T_{res}", "N", 'Location', 'best');
+xlim([0 L]);
+
+% 8. Moment
+nexttile
+hold on; grid on; box on;
+plot(y_kurv, Mx_kurv, 'LineWidth', lw);
+plot(y_kurv, My_kurv, 'LineWidth', lw);
+plot(y_kurv, Mz_kurv, 'LineWidth', lw);
+title("Kurvtagning – Moment");
+ylabel("Moment [Nm]");
+legend("Mx", "My", "Mz", 'Location', 'best');
+xlim([0 L]);
+
+% 9. Spänning
+nexttile
+hold on; grid on; box on;
+plot(y_vector, abs(normal_kurv./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vrid_kurv./1e6), 'LineWidth', lw)
+plot(y_vector, abs(skjuv_kurv./1e6), 'LineWidth', lw)
+title("Kurvtagning – Spänning")
+ylabel("Spänning [MPa]")
+legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+xlim([0 L]);
+
+ax = findobj(gcf,'Type','axes');
+linkaxes(ax, 'x');
