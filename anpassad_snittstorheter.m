@@ -16,22 +16,16 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     Ryz = R_yz;
     Ryx = R_yx;
     
-    % Mbi är momentet vid balkens ände (y=0). Antas noll för fritt roterande hjulaxel-ände.
+    % Mbi är momentet vid balkens ände (y=0). 
     Mbi = Hbi * r_hjul; 
-
-    % --- Definiera last-variabler beroende på fall ---
-    % Vi måste räkna ut vad F_driv, M_D, Mk, etc. ska vara
-    % så att din loop ger rätt fysikaliskt resultat.
 
     % Förbered hjälpstorheter
     M_val_driv  = F_k * r_drev;    % Moment från kedjan
     M_val_broms = F_b * r_broms;   % Moment från bromsen (per sida)
 
     if fall == 1 % ACCELERATION
-        % Din loop säger: Tyx = -F_driv/2.
         % Vid accel är kraften framåt (+). Alltså måste F_driv vara negativ här för att ge plus.
-        F_driv_total_mag = (M_val_driv / r_hjul);
-        F_driv = -F_driv_total_mag; 
+        F_driv = (M_val_driv / r_hjul);
         
         % Moment
         Mk = M_val_driv;           % Drevet driver (+)
@@ -48,8 +42,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     elseif fall == 2 % BROMSNING
         % Din loop säger: Tyx = -F_driv/2.
         % Vid broms är kraften bakåt (-). Alltså måste F_driv vara positiv här för att ge minus.
-        F_broms_total_mag = (M_val_broms * 2 / r_hjul);
-        F_driv = F_broms_total_mag; 
+        F_driv = (M_val_broms * 2 / r_hjul);
         
         % Bromskrafter
         % Din loop: Tyx = ... + F_broms. Bromsoket håller emot bakåt (-).
