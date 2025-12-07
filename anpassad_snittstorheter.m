@@ -1,4 +1,4 @@
-function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L, bb, b1, bd, N_points, r_hjul, r_drev, r_broms, Vbi, Hbi, R_ix, R_iy, R_iz, R_yx, R_yz, F_k, F_b)
+function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L, bb, b1, bd, N_points, r_hjul, r_drev, r_broms, Vbi, Vby, Hbi, Hby, R_ix, R_iy, R_iz, R_yx, R_yz, F_k, F_b)
 
     % Initiera vektorer
     y_vec = linspace(0, L, N_points);
@@ -18,7 +18,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     
     % Mbi är momentet vid balkens ände (y=0). 
     Mbi = Hbi * r_hjul; 
-
+    Mby = Hby * r_hjul;
     % Förbered hjälpstorheter
     M_val_driv  = F_k * r_drev;    % Moment från kedjan
     M_val_broms = F_b * r_broms;   % Moment från bromsen (per sida)
@@ -82,6 +82,7 @@ if y >= 0 && y < bb
     My_int = M_D; 
     Mz_int = Tyx_int * y;
 end
+
 if y >= bb && y < b1
     Tyz_int = -Vbi;
     Tyx_int = -F_driv/2 + F_broms;
@@ -90,6 +91,7 @@ if y >= bb && y < b1
     My_int = M_D - Mb; 
     Mz_int = Tyx_int * y - Fb * bb;
 end
+
 if y >= b1 && y < bd
     Tyz_int = -Vbi - Riz;
     Tyx_int = -F_driv/2 + F_broms - Rix;
@@ -98,6 +100,7 @@ if y >= b1 && y < bd
     My_int = M_D - Mb;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1;
 end
+
 if y >= bd && y < (L-b1)
     Tyz_int = -Vbi - Riz;
     Tyx_int = -F_driv/2 + F_broms - Rix - Fk;
@@ -106,6 +109,7 @@ if y >= bd && y < (L-b1)
     My_int = M_D - Mb + Mk;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd;
 end
+
 if y >= (L-b1) && y < (L-bb)
     Tyz_int = -Vbi - Riz - Ryz;
     Tyx_int = -F_driv/2 + F_broms - Rix - Fk- Ryx;
@@ -114,6 +118,7 @@ if y >= (L-b1) && y < (L-bb)
     My_int = M_D - Mb + Mk;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
+
 if y >= (L-bb) && y < L
     Tyz_int = -Vbi - Riz - Ryz;
     Tyx_int = -F_driv/2 + 2* F_broms - Rix - Fk- Ryx;
@@ -123,6 +128,14 @@ if y >= (L-bb) && y < L
     Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
 
+if y == L
+    Tyz_int = -Vbi - Riz - Ryz - Vby;    
+    Tyx_int = -F_driv/2 + 2*F_broms - Rix - Fk - Ryx - F_driv/2;
+    N = Hbi - Riy + Hby;
+    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1) - Mby + Vby * L;
+    My_int = 2 * M_D - 2 * Mb + Mk;
+    Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1) - (F_driv*L/2);
+end
 Tyz(i) = Tyz_int;
 Tyx(i) = Tyx_int;
 N_vec(i) = N; % Store the normal force for the current iteration
@@ -130,7 +143,5 @@ Mx(i) = Mx_int;
 My(i) = My_int; % Store the moment about the y-axis for the current iteration
 Mz(i) = Mz_int; % Store the moment about the z-axis for the current iteration
 end
-
-
 end
 
