@@ -65,7 +65,7 @@ y_vector = linspace(0, L, N);
 
 %% Lagerkrafter calc
 [R_yx_broms, R_ix_broms, R_yz_broms, R_iz_broms, R_iy_broms, Fk_broms, F_broms_broms]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_max_ms, 2, 0, 0, Nb_broms, Nb_broms, -FB_broms); %Skicka in bromsinput
-[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel, Nb_accel, FD_accel); %Skicka in accelerationsinput
+[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel/2, Nb_accel/2, FD_accel); %Skicka in accelerationsinput
 [R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv, Fk_kurv, F_broms_kurv]=F_lager(m, L, b_1, dh, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
 
 %% Snittstorhet calc
@@ -233,3 +233,183 @@ xlim([0 L]);
 
 ax = findobj(gcf,'Type','axes');
 linkaxes(ax, 'x');
+
+%% nya plots
+%% Plotting - Jämförelse Böjmoment (Figur 3)
+% Skapa en ny figur för momentjämförelse
+figure('Name', 'Böjmoment Jämförelse', 'NumberTitle', 'off', 'WindowState', 'maximized');
+t = tiledlayout(1, 3, 'TileSpacing', 'compact', 'Padding', 'normal'); % 1 rad, 3 kolumner
+
+% Förbered geometriska linjer och texter
+geo_lines = [b_b, b_1, b_d, L-b_1, L-b_b];
+geo_labels = {'broms', 'lager', 'drev', 'lager', 'broms'};
+
+% Beräkna resultanter
+M_res_acc = sqrt(Mx_acc.^2 + Mz_acc.^2);
+M_res_br  = sqrt(Mx_br.^2 + Mz_br.^2);
+M_res_kurv= sqrt(Mx_kurv.^2 + Mz_kurv.^2);
+
+% Gemensamma inställningar
+lw = 2; % Linjetjocklek
+font_sz = 12;
+
+% --- 1. Böjmoment Resultat (Totalen) ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, M_res_acc, 'r', 'LineWidth', lw);
+plot(y_br, M_res_br, 'g', 'LineWidth', lw);
+plot(y_kurv, M_res_kurv, 'b', 'LineWidth', lw);
+
+title("Böjmoment resultat", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Böjmoment, [Nm]", 'FontSize', font_sz);
+xlabel("x, [m]", 'FontSize', font_sz);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita geometrilinjer
+ylim_curr = ylim; % Hämta nuvarande gränser
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'LineWidth', 1, 'Color', [0.4 0.4 0.4]); % Grå streckad
+    % Lägg till text roterad 45 grader
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, ...
+        'Rotation', 45, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+
+
+% --- 2. Böjmoment Uppifrån (Mz - X-krafter) ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, Mz_acc, 'r', 'LineWidth', lw);
+plot(y_br, Mz_br, 'g', 'LineWidth', lw);
+plot(y_kurv, Mz_kurv, 'b', 'LineWidth', lw);
+
+title("Böjmoment Uppifrån", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Böjmoment, [Nm]", 'FontSize', font_sz);
+xlabel("x, [m]", 'FontSize', font_sz);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita geometrilinjer
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'LineWidth', 1, 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, ...
+        'Rotation', 45, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+
+
+% --- 3. Böjmoment Bakifrån (Mx - Z-krafter) ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, Mx_acc, 'r', 'LineWidth', lw);
+plot(y_br, Mx_br, 'g', 'LineWidth', lw);
+plot(y_kurv, Mx_kurv, 'b', 'LineWidth', lw);
+
+title("Böjmoment Bakifrån", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Böjmoment, [Nm]", 'FontSize', font_sz);
+xlabel("x, [m]", 'FontSize', font_sz);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita geometrilinjer
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'LineWidth', 1, 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, ...
+        'Rotation', 45, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+%% Plotting - Jämförelse Tvärkrafter (Figur 4)
+figure('Name', 'Tvärkraft Jämförelse', 'NumberTitle', 'off', 'WindowState', 'maximized');
+t = tiledlayout(1, 3, 'TileSpacing', 'compact', 'Padding', 'normal');
+
+% Geometri-inställningar
+geo_lines = [b_b, b_1, b_d, L-b_1, L-b_b];
+geo_labels = {'broms', 'lager', 'drev', 'lager', 'broms'};
+lw = 2; 
+
+% Beräkna resultanter
+T_res_acc = sqrt(Tyx_acc.^2 + Tyz_acc.^2);
+T_res_br  = sqrt(Tyx_br.^2 + Tyz_br.^2);
+T_res_kurv= sqrt(Tyx_kurv.^2 + Tyz_kurv.^2);
+
+% --- 1. Tvärkraft Resultat ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, T_res_acc, 'r', 'LineWidth', lw);
+plot(y_br, T_res_br, 'g', 'LineWidth', lw);
+plot(y_kurv, T_res_kurv, 'b', 'LineWidth', lw);
+
+title("Tvärkraft resultat", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Tvärkraft, [N]", 'FontSize', 12);
+xlabel("x, [m]", 'FontSize', 12);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita linjer & text
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, 'Rotation', 45, ...
+        'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+
+
+% --- 2. Tvärkraft Uppifrån (Tyx) ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, Tyx_acc, 'r', 'LineWidth', lw);
+plot(y_br, Tyx_br, 'g', 'LineWidth', lw);
+plot(y_kurv, Tyx_kurv, 'b', 'LineWidth', lw);
+
+title("Tvärkraft Uppifrån", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Tvärkraft, [N]", 'FontSize', 12);
+xlabel("x, [m]", 'FontSize', 12);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita linjer & text
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, 'Rotation', 45, ...
+        'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+
+
+% --- 3. Tvärkraft Bakifrån (Tyz) ---
+nexttile
+hold on; grid on; box on;
+plot(y_acc, Tyz_acc, 'r', 'LineWidth', lw);
+plot(y_br, Tyz_br, 'g', 'LineWidth', lw);
+plot(y_kurv, Tyz_kurv, 'b', 'LineWidth', lw);
+
+title("Tvärkraft Bakifrån", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("Tvärkraft, [N]", 'FontSize', 12);
+xlabel("x, [m]", 'FontSize', 12);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+
+% Rita linjer & text
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, 'Rotation', 45, ...
+        'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
+
+
+%% Plotting - Jämförelse Spänning (Figur 5)
+figure('Name', 'Spänning Jämförelse', 'NumberTitle', 'off', 'WindowState', 'maximized');
+
+hold on; grid on; box on;
+plot(y_vector, abs(normal_acc), 'r', 'LineWidth', lw);
+plot(y_vector, abs(normal_br), 'g', 'LineWidth', lw);
+plot(y_vector, abs(normal_kurv), 'b', 'LineWidth', lw);
+
+title("Normalspänning från böjmoment och normalkraft", 'FontSize', 14, 'FontWeight', 'bold');
+ylabel("\sigma, [Pa]", 'FontSize', 12);
+xlabel("x, [m]", 'FontSize', 12);
+legend("Acceleration", "Retardation", "Kurvtagning", 'Location', 'best');
+xlim([0 L]);
+
+% Rita linjer & text för spänningsdiagrammet
+ylim_curr = ylim;
+for k = 1:length(geo_lines)
+    xline(geo_lines(k), '--k', 'Color', [0.4 0.4 0.4]);
+    text(geo_lines(k), ylim_curr(1), geo_labels{k}, 'Rotation', 45, ...
+        'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'FontSize', 10);
+end
