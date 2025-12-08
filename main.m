@@ -1,4 +1,4 @@
-% close all;
+close all;
 %% Vehicle parameters
 % Värdena är tagna från "Typiska värden" i Tabell 2 i projektbeskrivningen.
 

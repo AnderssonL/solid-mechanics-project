@@ -15,7 +15,7 @@ end
 
 if styrVariabel==2 %Bromsning med konstant retardation
     F_k=0;
-    F_b=((m*a2+F_luft)*d_h/2)/(r_b*2);
+    F_b=((m*a2+F_luft)*d_h/2)/(r_b);
 
 end
 
