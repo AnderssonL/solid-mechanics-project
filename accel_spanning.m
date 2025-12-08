@@ -9,32 +9,32 @@ function [normal, vrid, skjuv] = accel_spanning(d, D, N_points, b_b, b_1, b_d, L
         y = y_vec(i);
 
         if 0<=y && y<=b_b
-            normal(i) = d*(N_b*y)/(2*ii);
+            normal(i) = d*(N_b*y)/(ii);
             vrid(i)   = 0;
             skjuv(i)  = (4*N_b)/(3*a);
     
         elseif b_b<y && y<=b_1
-            normal(i) = d*(N_b*y)/(2*ii);
+            normal(i) = d*(N_b*y)/(ii);
             vrid(i)   = 0;
             skjuv(i)  = (4*N_b)/(3*a);
     
         elseif b_1<y && y<=b_d
-            normal(i) = D*(N_b*b_1)/(2*I);
+            normal(i) = D*(N_b*b_1)/(I);
             vrid(i)   = 0;
             skjuv(i)  = (4*R_ix)/(3*A);
     
         elseif b_d<y && y<=L-b_1
-            normal(i) = D*(N_b*b_1)/(2*I);
+            normal(i) = D*(N_b*b_1)/(I);
             vrid(i)   = D*(M_k(i))/(2*K);
             skjuv(i)  = (4*(R_ix-F_k))/(3*A);
     
         elseif L-b_1<y && y<=L-b_b
-            normal(i) = d*(N_b*(y+L))/(2*ii);
+            normal(i) = d*(N_b*(y+L))/(ii);
             vrid(i)   = d*(M_k(i))/(2*k); 
             skjuv(i)  = (4*N_b)/(3*a);
     
         elseif L-b_b<y && y<=L
-            normal(i) = d*(N_b*(y+L))/(2*ii);
+            normal(i) = d*(N_b*(y+L))/(ii);
             vrid(i)   = d*(M_k(i))/(2*k);
             skjuv(i)  = (4*N_b)/(3*a);
     
