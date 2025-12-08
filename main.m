@@ -231,8 +231,8 @@ ylabel("Spänning [MPa]")
 legend("Normal", "Vridskjuv", "Tvärskjuv", 'Location', 'best')
 xlim([0 L]);
 
-ax = findobj(gcf,'Type','axes');
-linkaxes(ax, 'x');
+% ax = findobj(gcf,'Type','axes');
+% linkaxes(ax, 'x');
 
 % %% nya plots
 % %% Plotting - Jämförelse Böjmoment (Figur 3)
