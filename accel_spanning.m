@@ -5,6 +5,7 @@ function [normal, vrid, skjuv] = accel_spanning(d, D, N_points, b_b, b_1, b_d, L
     vrid = zeros(1, N_points);
     skjuv = zeros(1, N_points);
 
+
     for i = 1:N_points
         y = y_vec(i);
 

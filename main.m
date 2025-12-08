@@ -75,9 +75,13 @@ y_vector = linspace(0, L, N);
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-[normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, FB_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
-[normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mz_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
-[normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
+% [normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, FB_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+% [normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mz_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
+% [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
+
+[normal_br, vridskjuv_br, tvarskjuv_br] = nominella_spanningar(y_br, L, b_1, D, d, A, a, K, k, I, i, Tyx_br, Tyz_br, N_br, Mx_br, My_br, Mz_br);
+[normal_acc, vridskjuv_acc, tvarskjuv_acc] = nominella_spanningar(y_acc, L, b_1, D, d, A, a, K, k, I, i, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mz_acc);
+[normal_kurv, vridskjuv_kurv, tvarskjuv_kurv] = nominella_spanningar(y_kurv, L, b_1, D, d, A, a, K, k, I, i, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv, Mz_kurv);
 
 effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vrid_br, skjuv_br));
 effektiv_spanning_acc = max(Effektiv_spanning_nominal(normal_acc, vrid_acc, skjuv_acc));
