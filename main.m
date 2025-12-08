@@ -18,7 +18,7 @@ kalradie = 4e-3;   % Kälradie [m]
 
 
 a1 = 6;             % Acceleration i accelerationslastfallet [m/s^2]
-a2 = -15;           % Max retardation (värdet är positivt) [m/s^2]
+a2 = 15;           % Max retardation (värdet är positivt) [m/s^2]
 v_max_kmh = 100;    % Maxfart (rakt fram) [km/h] (70-120)
 v_max_ms = v_max_kmh / 3.6; % Konvertera maxfart till [m/s]
 gamma = 0.8;        % Faktor för max hastighet i kurva          Bestäm!
