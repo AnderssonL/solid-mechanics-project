@@ -75,7 +75,7 @@ y_vector = linspace(0, L, N);
 
 %% Nominal stress calc
 % If 0 is passed -> variable is unused in func
-% [normal_br, vrid_br, skjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, FB_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
+% [normal_br, vridskjuv_br,tvarskjuv_br] = broms_spanning(d, D, N, b_b, b_1, b_d, L, Nb_broms, FB_broms, Mb_broms, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, I, i, K, k); % matcha input parametrar ordning för alla nom stress funktioner.
 % [normal_acc, vrid_acc, skjuv_acc] = accel_spanning(d, D, N, b_b, b_1, b_d, L, Nb_accel, 0, 0, Mz_acc, 0, 0, 0, R_ix_accel, 0, 0, Fk_accel, A, a, I, i, K, k);
 % [normal_kurv, vrid_kurv, skjuv_kurv] = kurv_spanning(d, D, N, b_b, b_1, b_d, L, 0, 0, 0, 0, H_bi_kurva, V_bi_kurva, V_by_kurva, 0, R_iz_kurv, R_yz_kurv, 0, A, a, I, i, 0, 0);
 
@@ -83,13 +83,9 @@ y_vector = linspace(0, L, N);
 [normal_acc, vridskjuv_acc, tvarskjuv_acc] = nominella_spanningar(y_acc, L, b_1, D, d, A, a, K, k, I, i, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mz_acc);
 [normal_kurv, vridskjuv_kurv, tvarskjuv_kurv] = nominella_spanningar(y_kurv, L, b_1, D, d, A, a, K, k, I, i, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv, Mz_kurv);
 
-effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vrid_br, skjuv_br));
-effektiv_spanning_acc = max(Effektiv_spanning_nominal(normal_acc, vrid_acc, skjuv_acc));
-effektiv_spanning_kurv = max(Effektiv_spanning_nominal(normal_kurv, vrid_kurv, skjuv_kurv));
-
-disp("Effektivspänning bromsning " + effektiv_spanning_br/1000000 + "MPa");
-disp("Effektivspänning acceleration " + effektiv_spanning_acc/1000000 + "MPa");
-disp("Effektivspänning kurvtagning " + effektiv_spanning_kurv/1000000 + "MPa");
+effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vridskjuv_br,tvarskjuv_br));
+effektiv_spanning_acc = max(Effektiv_spanning_nominal(normal_acc, vridskjuv_acc, tvarskjuv_acc));
+effektiv_spanning_kurv = max(Effektiv_spanning_nominal(normal_kurv, vridskjuv_kurv, tvarskjuv_kurv));
 
 %% Lokala spänningskonc calc (för kurvtagning)
 % Hjälpfunktion för att bestämma formfaktorer (se tabell 32.4 i formelsamlingen)
@@ -107,7 +103,7 @@ K_lager_vrid   = 1.60;
 
 % beräkna lokala spänningskonc för drev (1 st), broms (2 st), lager (2 st)
 % ex: col1 = broms1, col2 = broms2, row1 = normalspänning, row2 = vridspänning
-[spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = koncentrerad_spanning(normal_kurv, vrid_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
+[spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = koncentrerad_spanning(normal_kurv, vridskjuv_kurv, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
 
 % beräkna effektivspänning med von mises för 1D balk
 [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2] = effektiv_spanning(spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2);
@@ -160,11 +156,11 @@ xlim([0 L]);
 nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_br./1e6), 'LineWidth', lw)
-plot(y_vector, abs(vrid_br./1e6), 'LineWidth', lw)
-plot(y_vector, abs(skjuv_br./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vridskjuv_br./1e6), 'LineWidth', lw)
+plot(y_vector, abs(tvarskjuv_br./1e6), 'LineWidth', lw)
 title("Bromsning – Spänning")
 ylabel("Spänning [MPa]")
-legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+legend("Normal", "Vridskjuv", "Tvärskjuv", 'Location', 'best')
 xlim([0 L]);
 
 % --- RAD 2: ACCELERATION ---
@@ -194,11 +190,11 @@ xlim([0 L]);
 nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_acc./1e6), 'LineWidth', lw)
-plot(y_vector, abs(vrid_acc./1e6), 'LineWidth', lw)
-plot(y_vector, abs(skjuv_acc./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vridskjuv_acc./1e6), 'LineWidth', lw)
+plot(y_vector, abs(tvarskjuv_acc./1e6), 'LineWidth', lw)
 title("Acceleration – Spänning")
 ylabel("Spänning [MPa]")
-legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+legend("Normal", "Vridskjuv", "Tvärskjuv", 'Location', 'best')
 xlim([0 L]);
 
 % --- RAD 3: KURVTAGNING ---
@@ -228,11 +224,11 @@ xlim([0 L]);
 nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_kurv./1e6), 'LineWidth', lw)
-plot(y_vector, abs(vrid_kurv./1e6), 'LineWidth', lw)
-plot(y_vector, abs(skjuv_kurv./1e6), 'LineWidth', lw)
+plot(y_vector, abs(vridskjuv_kurv./1e6), 'LineWidth', lw)
+plot(y_vector, abs(tvarskjuv_kurv./1e6), 'LineWidth', lw)
 title("Kurvtagning – Spänning")
 ylabel("Spänning [MPa]")
-legend("Normal", "Vrid", "Skjuv", 'Location', 'best')
+legend("Normal", "Vridskjuv", "Tvärskjuv", 'Location', 'best')
 xlim([0 L]);
 
 ax = findobj(gcf,'Type','axes');
