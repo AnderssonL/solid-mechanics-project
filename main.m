@@ -74,9 +74,12 @@ n_u = 2.0;          % Säkerhetsfaktor mot utmattning
 [normal_acc, vridskjuv_acc, tvarskjuv_acc] = nominella_spanningar(y_acc, L, b_1, D, d, A, a, K, k, I, i, Tyx_acc, Tyz_acc, N_acc, Mx_acc, My_acc, Mz_acc);
 [normal_kurv, vridskjuv_kurv, tvarskjuv_kurv] = nominella_spanningar(y_kurv, L, b_1, D, d, A, a, K, k, I, i, Tyx_kurv, Tyz_kurv, N_kurv, Mx_kurv, My_kurv, Mz_kurv);
 
-effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vridskjuv_br,tvarskjuv_br));
+effektiv_spanning_br = max(Effektiv_spanning_nominal(normal_br, vridskjuv_br, tvarskjuv_br));
 effektiv_spanning_acc = max(Effektiv_spanning_nominal(normal_acc, vridskjuv_acc, tvarskjuv_acc));
 effektiv_spanning_kurv = max(Effektiv_spanning_nominal(normal_kurv, vridskjuv_kurv, tvarskjuv_kurv));
+disp("Effektivspänning broms " + effektiv_spanning_br/1000000);
+disp("Effektivspänning acceleration " + effektiv_spanning_acc/1000000);
+disp("Effektivspänning kurvtagning " + effektiv_spanning_kurv/1000000);
 
 %% Lokala spänningskonc calc (för kurvtagning)
 % Hjälpfunktion för att bestämma formfaktorer (se tabell 32.4 i formelsamlingen)
@@ -105,8 +108,8 @@ spanneff = [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, sp
 [~, idx_max_spanneff] = max(spanneff);
 strackgrans = spanneff(idx_max_spanneff) * n_s;
 effektiv_spanning_nominal_max = max([effektiv_spanning_br, effektiv_spanning_acc, effektiv_spanning_kurv]);
-disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
 disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * effektiv_spanning_nominal_max/1000000 + " MPa");
+disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
 
 
 
