@@ -18,7 +18,6 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     
     % Mbi är momentet vid balkens ände (y=0). 
     Mbi = Hbi * r_hjul; 
-    Mby = Hby * r_hjul;
     % Förbered hjälpstorheter
     M_val_driv  = F_k * r_drev;    % Moment från kedjan
     M_val_broms = F_b * r_broms;   % Moment från bromsen (per sida)
@@ -57,7 +56,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
         Mb = M_val_broms;          % Bromsmoment
         M_D = M_val_broms;         % Hjulet driver axeln (tröghet) (+)
 
-    else % KURVTAGNING (Fall 3)
+    elseif fall == 3 % KURVTAGNING (Fall 3)
         % Liknar acceleration men med liten drivkraft (underhåll)
         F_driv = -(M_val_driv / r_hjul);
         
@@ -77,7 +76,7 @@ if y >= 0 && y < bb
     Tyz_int = -Vbi;
     Tyx_int = -F_driv/2;
     N = Hbi;
-    Mx_int = Tyz_int * y - Mbi;
+    Mx_int = -Tyz_int * y - Mbi;
     My_int = M_D; 
     Mz_int = Tyx_int * y;
 end
@@ -86,7 +85,7 @@ if y >= bb && y < b1
     Tyz_int = -Vbi;
     Tyx_int = -F_driv/2 + F_broms;
     N = Hbi;
-    Mx_int = Tyz_int * y - Mbi;
+    Mx_int = -Tyz_int * y - Mbi;
     My_int = M_D - Mb; 
     Mz_int = Tyx_int * y - Fb * bb;
 end
@@ -95,7 +94,7 @@ if y >= b1 && y < bd
     Tyz_int = -Vbi - Riz;
     Tyx_int = -F_driv/2 + F_broms - Rix;
     N = Hbi - Riy;
-    Mx_int = Tyz_int * y - Mbi + Riz * b1;
+    Mx_int = -Tyz_int * y - Mbi + Riz * b1;
     My_int = M_D - Mb;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1;
 end
@@ -104,7 +103,7 @@ if y >= bd && y < (L-b1)
     Tyz_int = -Vbi - Riz;
     Tyx_int = -F_driv/2 + F_broms - Rix - Fk;
     N = Hbi - Riy;
-    Mx_int = Tyz_int * y - Mbi + Riz * b1;
+    Mx_int = -Tyz_int * y - Mbi + Riz * b1;
     My_int = M_D - Mb + Mk;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd;
 end
@@ -113,16 +112,16 @@ if y >= (L-b1) && y < (L-bb)
     Tyz_int = -Vbi - Riz - Ryz;
     Tyx_int = -F_driv/2 + F_broms - Rix - Fk- Ryx;
     N = Hbi - Riy;
-    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
+    Mx_int = -Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
     My_int = M_D - Mb + Mk;
     Mz_int = Tyx_int * y - Fb * bb + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
 
 if y >= (L-bb) && y < L
     Tyz_int = -Vbi - Riz - Ryz;
-    Tyx_int = -F_driv/2 + 2* F_broms - Rix - Fk- Ryx;
+    Tyx_int = -F_driv/2 + 2 * F_broms - Rix - Fk- Ryx;
     N = Hbi - Riy;
-    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
+    Mx_int = -Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1);
     My_int = M_D - 2*Mb + Mk;
     Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
