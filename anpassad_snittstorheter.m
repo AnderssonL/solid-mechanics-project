@@ -42,11 +42,11 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
     elseif fall == 2 % BROMSNING
         % Din loop säger: Tyx = -F_driv/2.
         % Vid broms är kraften bakåt (-). Alltså måste F_driv vara positiv här för att ge minus.
-        F_driv = (M_val_broms * 2 / r_hjul);
+        F_driv = -(M_val_broms * 2 / r_hjul);
         
         % Bromskrafter
         % Din loop: Tyx = ... + F_broms. Bromsoket håller emot bakåt (-).
-        F_broms = -F_b;
+        F_broms = F_b;
         
         % Fb används i Mz = ... - Fb * bb. Fb ska vara magnituden (positiv).
         Fb = F_b;
@@ -59,8 +59,7 @@ function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L,
 
     else % KURVTAGNING (Fall 3)
         % Liknar acceleration men med liten drivkraft (underhåll)
-        F_driv_total_mag = (M_val_driv / r_hjul);
-        F_driv = -F_driv_total_mag; % Negativ för att ge positiv framdrivning i din loop
+        F_driv = -(M_val_driv / r_hjul);
         
         Mk = M_val_driv;
         M_D = -M_val_driv / 2;
