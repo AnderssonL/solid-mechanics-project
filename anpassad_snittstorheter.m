@@ -127,15 +127,7 @@ if y >= (L-bb) && y < L
     Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1);
 end
 
-if y == L
-    Tyz_int = -Vbi - Riz - Ryz - Vby;    
-    Tyx_int = -F_driv + 2*F_broms - Rix - Fk - Ryx;
-    N = Hbi - Riy + Hby;
-    Mx_int = Tyz_int * y - Mbi + Riz * b1 + Ryz * (L-b1) - Mby + Vby * L;
-    My_int = 2 * M_D - 2 * Mb + Mk;
-    Mz_int = Tyx_int * y - Fb * L + Rix * b1 + Fk * bd + Ryx * (L-b1) - (F_driv*L/2);
-end
-Tyz(i) = Tyz_int;
+Tyz(i) = - Tyz_int;
 Tyx(i) = Tyx_int;
 N_vec(i) = N; % Store the normal force for the current iteration
 Mx(i) = Mx_int;
