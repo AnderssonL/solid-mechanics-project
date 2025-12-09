@@ -1,4 +1,4 @@
-function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L, bb, b1, bd, N_points, r_hjul, r_drev, r_broms, Vbi, Vby, Hbi, Hby, R_ix, R_iy, R_iz, R_yx, R_yz, F_k, F_b)
+function [y_vec, Tyx, Tyz, N_vec, Mx, My, Mz] = anpassad_snittstorheter(fall, L, bb, b1, bd, N_points, r_hjul, r_drev, r_broms, Vbi, Hbi, R_ix, R_iy, R_iz, R_yx, R_yz, F_k, F_b)
 
     % Initiera vektorer
     y_vec = linspace(0, L, N_points);
