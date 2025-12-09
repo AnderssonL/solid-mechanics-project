@@ -5,9 +5,9 @@ function [normal_vec, vridskjuv_vec, tvarskjuv_vec] = nominella_spanningar(y_vec
 
     antal_snitt = numel(N_vec);
     
-    normal_vec = zeros(antal_snitt);
-    vridskjuv_vec = zeros(antal_snitt);
-    tvarskjuv_vec = zeros(antal_snitt);
+    normal_vec = zeros(1, antal_snitt);
+    vridskjuv_vec = zeros(1, antal_snitt);
+    tvarskjuv_vec = zeros(1, antal_snitt);
 
     for i = 1:antal_snitt
         
