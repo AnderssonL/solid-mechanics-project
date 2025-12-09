@@ -1,9 +1,9 @@
-function [V_bi, V_fi, V_by, V_fy, H_bi, H_fi, H_by, H_fy, M_b, F_D, V_i, V_y, H_i, H_y] = kurvtagning_hjulkrafter(df, db, h1, h, m, Cd, p, v, R, L, r, g)
+function [V_bi, V_fi, V_by, V_fy, H_bi, H_fi, H_by, H_fy, M_b, F_D, V_i, V_y, H_i, H_y] = kurvtagning_hjulkrafter(df, db, h1, h, m, Cd, p, v, vkurva,  R, L, r, g)
 
 % --- Grundläggande krafter ---
 F_L = 1/2 * Cd * p * v^2;
 F_D = F_L; 
-F_C = m * v^2 / R; 
+F_C = m * vkurva^2 / R; 
 
 % --- Totala normalkrafter per axel (som vid körning rakt fram) ---
 axelavstand = df + db;
