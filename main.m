@@ -114,156 +114,112 @@ disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentr
 
 
 
+%% Plotting - 3x3 Sammanställning (Alla fall i en figur)
 
+figure('Name', 'Sammanställning: Accel, Broms, Kurva', 'NumberTitle', 'off', 'WindowState', 'maximized');
+t = tiledlayout(3, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+xlabel(t, 'Längd [m]', 'FontSize', 12, 'FontWeight', 'bold');
 
-%% Plotting - 9 Separata Figurer
-
-% --- Inställningar för utseende ---
-lw = 2; % Linjetjocklek
-geo_lines = [b_b, b_1, b_d, L-b_1, L-b_b]; % Positioner
-geo_labels = {'Broms', 'Lager', 'Drev', 'Lager', 'Broms'}; % Namn
+% --- Inställningar ---
+lw = 1.5; 
+geo_lines = [b_b, b_1, b_d, L-b_1, L-b_b]; 
+geo_labels = {'Br', 'La', 'Dr', 'La', 'Br'}; % Förkortade namn för att få plats
 
 % =========================================================================
-% 1. ACCELERATION
+% RAD 1: ACCELERATION
 % =========================================================================
 
-% --- Figur 1: Accel Krafter ---
-figure('Name', 'Acceleration: Krafter', 'NumberTitle', 'off');
+% 1. Accel Krafter
+nexttile
 hold on; grid on; box on;
-
-
 plot(y_acc, Tyx_acc/1000, 'r', 'LineWidth', lw);
 plot(y_acc, Tyz_acc/1000, 'b', 'LineWidth', lw);
 plot(y_acc, N_acc/1000,   'k', 'LineWidth', lw);
-title('Acceleration – Krafter');
-ylabel('Kraft [kN]'); xlabel('Längd [m]');
-legend('Tvärkraft X (Horisontell)', 'Tvärkraft Z (Vertikal)', 'Normalkraft', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-yl = ylim;
-for k = 1:length(geo_lines)
-    xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]);
-    text(geo_lines(k), yl(2), geo_labels{k}, 'VerticalAlignment','bottom','HorizontalAlignment','center','FontSize',8);
-end
+title('Accel: Krafter'); ylabel('kN'); xlim([0 L]);
+legend('T_x', 'T_z', 'N', 'Location', 'best');
+% Geometri
+yl=ylim; for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
-% --- Figur 2: Accel Moment ---
-figure('Name', 'Acceleration: Moment', 'NumberTitle', 'off');
+% 2. Accel Moment
+nexttile
 hold on; grid on; box on;
 plot(y_acc, Mx_acc, 'r', 'LineWidth', lw);
 plot(y_acc, My_acc, 'g', 'LineWidth', lw);
 plot(y_acc, Mz_acc, 'b', 'LineWidth', lw);
-title('Acceleration – Moment');
-ylabel('Moment [Nm]'); xlabel('Längd [m]');
-legend('Mx (Böjning Vertikal)', 'My (Vridmoment)', 'Mz (Böjning Horisontell)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+title('Accel: Moment'); ylabel('Nm'); xlim([0 L]);
+legend('M_x', 'M_y', 'M_z', 'Location', 'best');
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
-% --- Figur 3: Accel Spänningar ---
-figure('Name', 'Acceleration: Spänningar', 'NumberTitle', 'off');
+% 3. Accel Spänningar
+nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_acc)/1e6, 'r', 'LineWidth', lw);
-plot(y_vector, abs(vridskjuv_acc)/1e6,   'g', 'LineWidth', lw);
-plot(y_vector, abs(tvarskjuv_acc)/1e6,  'b', 'LineWidth', lw);
-title('Acceleration – Nominella Spänningar');
-ylabel('Spänning [MPa]'); xlabel('Längd [m]');
-legend('Normalspänning (\sigma)', 'Vridspänning (\tau_v)', 'Skjuvspänning (\tau_s)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+plot(y_vector, abs(vridskjuv_acc)/1e6, 'g', 'LineWidth', lw);
+plot(y_vector, abs(tvarskjuv_acc)/1e6, 'b', 'LineWidth', lw);
+title('Accel: Spänning'); ylabel('MPa'); xlim([0 L]);
+legend('\sigma', '\tau_v', '\tau_s', 'Location', 'best');
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
 
 % =========================================================================
-% 2. BROMSNING
+% RAD 2: BROMSNING
 % =========================================================================
 
-% --- Figur 4: Broms Krafter ---
-figure('Name', 'Bromsning: Krafter', 'NumberTitle', 'off');
+% 4. Broms Krafter
+nexttile
 hold on; grid on; box on;
 plot(y_br, Tyx_br/1000, 'r', 'LineWidth', lw);
 plot(y_br, Tyz_br/1000, 'b', 'LineWidth', lw);
 plot(y_br, N_br/1000,   'k', 'LineWidth', lw);
-title('Bromsning – Krafter');
-ylabel('Kraft [kN]'); xlabel('Längd [m]');
-legend('Tvärkraft X', 'Tvärkraft Z', 'Normalkraft', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-yl = ylim;
-for k = 1:length(geo_lines)
-    xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]);
-    text(geo_lines(k), yl(2), geo_labels{k}, 'VerticalAlignment','bottom','HorizontalAlignment','center','FontSize',8);
-end
+title('Broms: Krafter'); ylabel('kN'); xlim([0 L]);
+yl=ylim; for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
-% --- Figur 5: Broms Moment ---
-figure('Name', 'Bromsning: Moment', 'NumberTitle', 'off');
+% 5. Broms Moment
+nexttile
 hold on; grid on; box on;
 plot(y_br, Mx_br, 'r', 'LineWidth', lw);
 plot(y_br, My_br, 'g', 'LineWidth', lw);
 plot(y_br, Mz_br, 'b', 'LineWidth', lw);
-title('Bromsning – Moment');
-ylabel('Moment [Nm]'); xlabel('Längd [m]');
-legend('Mx (Böjning Vertikal)', 'My (Vridmoment)', 'Mz (Böjning Horisontell)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+title('Broms: Moment'); ylabel('Nm'); xlim([0 L]);
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
-% --- Figur 6: Broms Spänningar ---
-figure('Name', 'Bromsning: Spänningar', 'NumberTitle', 'off');
+% 6. Broms Spänningar
+nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_br)/1e6, 'r', 'LineWidth', lw);
-plot(y_vector, abs(vridskjuv_br)/1e6,   'g', 'LineWidth', lw);
-plot(y_vector, abs(tvarskjuv_br)/1e6,  'b', 'LineWidth', lw);
-title('Bromsning – Nominella Spänningar');
-ylabel('Spänning [MPa]'); xlabel('Längd [m]');
-legend('Normalspänning (\sigma)', 'Vridspänning (\tau_v)', 'Skjuvspänning (\tau_s)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+plot(y_vector, abs(vridskjuv_br)/1e6, 'g', 'LineWidth', lw);
+plot(y_vector, abs(tvarskjuv_br)/1e6, 'b', 'LineWidth', lw);
+title('Broms: Spänning'); ylabel('MPa'); xlim([0 L]);
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
 
 % =========================================================================
-% 3. KURVTAGNING
+% RAD 3: KURVTAGNING
 % =========================================================================
 
-% --- Figur 7: Kurvtagning Krafter ---
-figure('Name', 'Kurvtagning: Krafter', 'NumberTitle', 'off');
+% 7. Kurv Krafter
+nexttile
 hold on; grid on; box on;
 plot(y_kurv, Tyx_kurv/1000, 'r', 'LineWidth', lw);
 plot(y_kurv, Tyz_kurv/1000, 'b', 'LineWidth', lw);
 plot(y_kurv, N_kurv/1000,   'k', 'LineWidth', lw);
-title('Kurvtagning – Krafter');
-ylabel('Kraft [kN]'); xlabel('Längd [m]');
-legend('Tvärkraft X', 'Tvärkraft Z', 'Normalkraft', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-yl = ylim;
-for k = 1:length(geo_lines)
-    xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]);
-    text(geo_lines(k), yl(2), geo_labels{k}, 'VerticalAlignment','bottom','HorizontalAlignment','center','FontSize',8);
-end
+title('Kurv: Krafter'); ylabel('kN'); xlim([0 L]);
+yl=ylim; for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); if k==3, text(geo_lines(k), yl(1), geo_labels{k}, 'VerticalAlignment','bottom','HorizontalAlignment','center','FontSize',8); end; end
 
-% --- Figur 8: Kurvtagning Moment ---
-figure('Name', 'Kurvtagning: Moment', 'NumberTitle', 'off');
+% 8. Kurv Moment
+nexttile
 hold on; grid on; box on;
 plot(y_kurv, Mx_kurv, 'r', 'LineWidth', lw);
 plot(y_kurv, My_kurv, 'g', 'LineWidth', lw);
 plot(y_kurv, Mz_kurv, 'b', 'LineWidth', lw);
-title('Kurvtagning – Moment');
-ylabel('Moment [Nm]'); xlabel('Längd [m]');
-legend('Mx (Böjning Vertikal)', 'My (Vridmoment)', 'Mz (Böjning Horisontell)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+title('Kurv: Moment'); ylabel('Nm'); xlim([0 L]);
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
 
-% --- Figur 9: Kurvtagning Spänningar ---
-figure('Name', 'Kurvtagning: Spänningar', 'NumberTitle', 'off');
+% 9. Kurv Spänningar
+nexttile
 hold on; grid on; box on;
 plot(y_vector, abs(normal_kurv)/1e6, 'r', 'LineWidth', lw);
-plot(y_vector, abs(vridskjuv_kurv)/1e6,   'g', 'LineWidth', lw);
-plot(y_vector, abs(tvarskjuv_kurv)/1e6,  'b', 'LineWidth', lw);
-title('Kurvtagning – Nominella Spänningar');
-ylabel('Spänning [MPa]'); xlabel('Längd [m]');
-legend('Normalspänning (\sigma)', 'Vridspänning (\tau_v)', 'Skjuvspänning (\tau_s)', 'Location', 'best');
-xlim([0 L]);
-% Rita geometri
-for k = 1:length(geo_lines), xline(geo_lines(k), '--', 'Color', [0.6 0.6 0.6]); end
+plot(y_vector, abs(vridskjuv_kurv)/1e6, 'g', 'LineWidth', lw);
+plot(y_vector, abs(tvarskjuv_kurv)/1e6, 'b', 'LineWidth', lw);
+title('Kurv: Spänning'); ylabel('MPa'); xlim([0 L]);
+for k=1:5, xline(geo_lines(k),'--', 'Color',[0.6 0.6 0.6]); end
