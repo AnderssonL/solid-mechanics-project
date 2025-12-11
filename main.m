@@ -20,14 +20,14 @@ rho_luft = 1.225;   % Luftens densitet [kg/m^3]
 
 %% Rear axel parameters
 L = 1.2; % axel längd
-D = 0.1; % axel diameter (tjockare del) Bestäm!
+D = 0.056; % axel diameter (tjockare del) Bestäm!
 d = 0.6*D; % axel diameter (tunnare del)
 R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
 
 b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
-b_b = 0.08;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
-b_d = 0.6;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
+b_b = 0.11;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
+b_d = 0.15;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
                     % L/2 = 0.55. Så 0.15 < 0.25 < 0.55. OK.
 
 A = (pi*D^2)/4; % Tvärsnittsarea (tjockare del)

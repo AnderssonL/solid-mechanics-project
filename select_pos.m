@@ -2,7 +2,7 @@
 
 b_1 = 0.15;
 L=1.2;
-drev = 0.01:0.01:L/2;
+drev = b_1:0.01:L/2;
 broms = 0.01:0.01:b_1;
 %spanningar = zeros(numel(drev),numel(broms));
 smallest = 1000000000000000000000;
