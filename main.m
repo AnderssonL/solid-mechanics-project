@@ -102,7 +102,7 @@ K_lager_vrid   = 1.60;
 % beräkna lokala spänningskonc för drev (1 st), broms (2 st), lager (2 st)
 % ex: col1 = broms1, col2 = broms2, row1 = normalspänning, row2 = vridspänning
 [spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2] = koncentrerad_spanning(normal_br, vridskjuv_br, K_drev_normal, K_drev_vrid, K_broms_normal, K_broms_vrid, K_lager_normal, K_lager_vrid, L, b_1, b_b, b_d, N);
-
+spannkonc = [spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2];
 % beräkna effektivspänning med von mises för 1D balk
 [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2] = effektiv_spanning(spannkonc_drev, spannkonc_broms1, spannkonc_broms2, spannkonc_lager1, spannkonc_lager2);
 spanneff = [spanneff_drev, spanneff_broms1, spanneff_broms2, spanneff_lager1, spanneff_lager2];
@@ -254,3 +254,17 @@ hold on; grid on; box on;
 plot(y_vector, effektiv_spanning_kurv/1e6, 'r', 'LineWidth', lw);
 title('Kurvtagning: Effektivspänning'); ylabel('Spänning [MPa]'); xlabel("y [m]"); xlim([0 L]);
 legend('\sigma_{vM}','Location','best');
+
+% ===========================
+%  Figur 13 — Sammaställd Effektivspänning
+% ===========================
+figure(13); clf;
+hold on; grid on; box on;
+plot(y_vector, effektiv_spanning_br/1e6, 'r', 'LineWidth', lw);
+plot(y_vector, effektiv_spanning_acc/1e6, 'b', 'LineWidth', lw);
+plot(y_vector, effektiv_spanning_kurv/1e6, 'g', 'LineWidth', lw);
+title('Effektivspänning'); 
+ylabel('Spänning [MPa]'); 
+xlabel("y [m]"); xlim([0 L]);
+legend('\sigma_{vM, Broms}', '\sigma_{vM, Acceleration}', '\sigma_{vM, Kurvtagning}', 'Location','best');
+
