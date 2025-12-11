@@ -81,6 +81,10 @@ disp("Effektivspänning broms " + effektiv_spanning_br/1000000);
 disp("Effektivspänning acceleration " + effektiv_spanning_acc/1000000);
 disp("Effektivspänning kurvtagning " + effektiv_spanning_kurv/1000000);
 
+effektiv_spanning_br = Effektiv_spanning_nominal(normal_br, vridskjuv_br, tvarskjuv_br);
+effektiv_spanning_acc = Effektiv_spanning_nominal(normal_acc, vridskjuv_acc, tvarskjuv_acc);
+effektiv_spanning_kurv = Effektiv_spanning_nominal(normal_kurv, vridskjuv_kurv, tvarskjuv_kurv);
+
 %% Lokala spänningskonc calc (för kurvtagning)
 % Hjälpfunktion för att bestämma formfaktorer (se tabell 32.4 i formelsamlingen)
 formfaktorer_help(d, D, kalradie, r_drev, r_broms);
@@ -221,3 +225,32 @@ plot(y_vector, abs(vridskjuv_kurv)/1e6, 'g', 'LineWidth', lw);
 plot(y_vector, abs(tvarskjuv_kurv)/1e6, 'b', 'LineWidth', lw);
 title('Kurv: Spänning'); ylabel('Spänning [MPa]'); xlabel("y [m]"); xlim([0 L]);
 legend('\sigma', '\tau_v', '\tau_s','Location','best');
+
+
+
+% ===========================
+%  Figur 10 — Broms Effektivspänning
+% ===========================
+figure(10); clf;
+hold on; grid on; box on;
+plot(y_vector, effektiv_spanning_br/1e6, 'r', 'LineWidth', lw);
+title('Broms: Effektivspänning'); ylabel('Spänning [MPa]'); xlabel("y [m]"); xlim([0 L]);
+legend('\sigma_{vM}','Location','best');
+
+% ===========================
+%  Figur 11 — Acceleration Effektivspänning
+% ===========================
+figure(11); clf;
+hold on; grid on; box on;
+plot(y_vector, effektiv_spanning_acc/1e6, 'r', 'LineWidth', lw);
+title('Acceleration: Effektivspänning'); ylabel('Spänning [MPa]'); xlabel("y [m]"); xlim([0 L]);
+legend('\sigma_{vM}','Location','best');
+
+% ===========================
+%  Figur 12 — Kurvtagning Effektivspänning
+% ===========================
+figure(12); clf;
+hold on; grid on; box on;
+plot(y_vector, effektiv_spanning_kurv/1e6, 'r', 'LineWidth', lw);
+title('Kurvtagning: Effektivspänning'); ylabel('Spänning [MPa]'); xlabel("y [m]"); xlim([0 L]);
+legend('\sigma_{vM}','Location','best');
