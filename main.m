@@ -53,15 +53,14 @@ v_accel = 1;        % Sätt en låg hastighet [m/s]
 n_s = 2.5;          % Säkerhetsfaktor mot plastisk deformation 
 n_u = 2.0;          % Säkerhetsfaktor mot utmattning
 
-
 %% Hjulkrafter calc
-[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
-[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
+[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
+[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
 [V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva, FD_kurva, V_i_kurva, V_y_kurva, H_i_kurva, H_y_kurva] = kurvtagning_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
 
 %% Lagerkrafter calc
 [R_yx_broms, R_ix_broms, R_yz_broms, R_iz_broms, R_iy_broms, Fk_broms, F_broms_broms]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_max_ms, 2, 0, 0, Nb_broms/2, Nb_broms/2, -FB_broms); %Skicka in bromsinput
-[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel/2, Nb_accel/2, FD_accel); %Skicka in accelerationsinput
+[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_accel, 1, 0, 0, Nb_accel/2, Nb_accel/2, FD_accel); %Skicka in accelerationsinput
 [R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv, Fk_kurv, F_broms_kurv]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
 
 %% Snittstorhet calc
@@ -116,13 +115,69 @@ disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentr
 disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
 
 
+%% Utmattningsparametrar och Haigh-diagram
+
+% Materialdata (Givet i din kod/tabell)
+sigma_ub = 460e6;   % Utmattningsgräns (växlande böjning)
+Rm = 860e6;         % Brottgräns
+Rp02 = 550e6;       % Sträckgräns
+
+% --- 1. Bestäm formfaktor Kt och Utmattningsverkan Kf ---
+% Vi väljer det värsta fallet av formfaktorerna vi har (t.ex. broms eller drev).
+% Här tar vi maximum av de normal-Kt vi har definierat tidigare.
+Kt_utm = max([K_drev_normal, K_broms_normal, K_lager_normal]); 
+
+q = 0.9; % Känslighetsfaktor (Givet)
+Kf_utm = 1 + q * (Kt_utm - 1); % Beräkning av utmattningsverkan
+
+% --- 2. Bestäm övriga faktorer ---
+% Dimensionsfaktor (k_dim): För axlar d=40-50mm är ca 0.8 rimligt. 
+% (Du kan göra detta mer exakt beroende på diameter d eller D).
+if D < 0.05
+    Kd_utm = 0.85;
+else
+    Kd_utm = 0.81; % Ungefärligt värde för 50mm
+end
+
+% Ytfaktor (k_yt): Beroende på Rm och bearbetning (Svarvad).
+% För Rm=860 och svarvad yta ligger faktorn ofta runt 0.8 - 0.85.
+Ky_utm = 0.82; 
+
+% --- 3. Hämta spänningar från värsta lastfallet (Kurvtagning) ---
+% Vi måste hitta var på axeln spänningen är högst för att kolla utmattning där.
+% Vi använder effektivspänningen (von Mises) som amplitudspänning för att vara säkra,
+% även om Haigh strikt sett är för normalspänning.
+[max_eff_stress, idx_max] = max(effektiv_spanning_kurv);
+
+% Sigma_a (Amplitud): Det som böjer axeln när den snurrar.
+% Vi använder von mises-spänningen (eller bara böjspänningen) som amplitud.
+sigma_a_input = max_eff_stress; 
+
+% Sigma_m (Medel): Statisk last (Drag/Tryck från N).
+% I kurvtagning finns en axiell last N_kurv.
+if y_kurv(idx_max) < b_1 || y_kurv(idx_max) > L-b_1
+    area_vid_snitt = a; % Tunnare del
+else
+    area_vid_snitt = A; % Tjockare del
+end
+sigma_m_input = abs(N_kurv(idx_max)) / area_vid_snitt;
+
+% --- 4. Kör Haigh-funktionen ---
+[n_haigh, sigma_u_red, h_x, h_y_ideal, h_y_red, h_y_yield] = haigh_data(sigma_m_input, sigma_a_input, Rm, Rp02, sigma_ub, Ky_utm, Kd_utm, Kf_utm);
+
+disp("------------------------------------------------");
+disp("HAIGH-RESULTAT (Kurvtagning - Dimensionerande snitt)");
+disp("Vald Kt (max): " + Kt_utm);
+disp("Beräknad Kf: " + Kf_utm);
+disp("Reducerad utmattningsgräns: " + sigma_u_red/1e6 + " MPa");
+disp("Arbetspunkt: Sigma_a=" + sigma_a_input/1e6 + " MPa, Sigma_m=" + sigma_m_input/1e6 + " MPa");
+disp("Säkerhetsfaktor mot utmattning: " + n_haigh);
+disp("------------------------------------------------");
 
 
+%% PLOTTNING
 
-
-
-%% Plotting - 3x3 Sammanställning (Alla fall i en figur)
-
+lw = 1.5;
 % ===========================
 %  Figur 1 — Accel Krafter
 % ===========================
@@ -268,3 +323,19 @@ ylabel('Spänning [MPa]');
 xlabel("y [m]"); xlim([0 L]);
 legend('\sigma_{vM, Broms}', '\sigma_{vM, Acceleration}', '\sigma_{vM, Kurvtagning}', 'Location','best');
 
+% ===========================
+%  Figur 14 — Haigh-Diagram
+% ===========================
+figure(14); clf;
+hold on; grid on; box on;
+fill([h_x fliplr(h_x)]/1e6, [h_y_red fliplr(zeros(size(h_y_red)))]/1e6, [0.9 0.9 1], 'EdgeColor', 'none', 'FaceAlpha', 0.3); % Fyll säkert område
+plot(h_x/1e6, h_y_ideal/1e6, 'k--', 'LineWidth', 1.0);
+plot(h_x/1e6, h_y_red/1e6, 'r', 'LineWidth', 2.0);
+plot(h_x/1e6, h_y_yield/1e6, 'b-.', 'LineWidth', 1.5);
+plot(sigma_m_input/1e6, sigma_a_input/1e6, 'ko', 'MarkerFaceColor', 'g', 'MarkerSize', 8);
+
+xlabel('Medelspänning \sigma_m [MPa]');
+ylabel('Amplitudspänning \sigma_a [MPa]');
+title(['Haigh-diagram (Reducerat), n_{utm} = ' num2str(n_haigh, '%.2f')]);
+legend('Säkert område', 'Ideal gräns (Goodman)', 'Reducerad gräns (Design)', 'Sträckgräns (Langer)', 'Arbetspunkt', 'Location', 'NorthEast');
+axis([0 Rm/1e6 0 Rm/1e6]);
