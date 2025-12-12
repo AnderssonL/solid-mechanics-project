@@ -147,7 +147,7 @@ Ky_utm = 0.82;
 % Vi måste hitta var på axeln spänningen är högst för att kolla utmattning där.
 % Vi använder effektivspänningen (von Mises) som amplitudspänning för att vara säkra,
 % även om Haigh strikt sett är för normalspänning.
-[max_eff_stress, idx_max] = max(effektiv_spanning_kurv);
+[max_eff_stress, idx_max] = max(effektiv_spanning_br);
 
 % Sigma_a (Amplitud): Det som böjer axeln när den snurrar.
 % Vi använder von mises-spänningen (eller bara böjspänningen) som amplitud.
