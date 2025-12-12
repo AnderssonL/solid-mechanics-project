@@ -26,8 +26,8 @@ R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
 
 b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
-b_b = 0.11;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
-b_d = 0.15;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
+b_b = 0.12;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
+b_d = 0.16;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
                     % L/2 = 0.55. Så 0.15 < 0.25 < 0.55. OK.
 
 A = (pi*D^2)/4; % Tvärsnittsarea (tjockare del)
