@@ -1,4 +1,5 @@
 function  strackgrans = main_spanning(b_b,b_d)
+close all;
 %% Vehicle parameters
 % Värdena är tagna från "Typiska värden" i Tabell 2 i projektbeskrivningen.
 m = 150;            % Fordonets vikt inkl. förare [kg]
@@ -20,14 +21,13 @@ rho_luft = 1.225;   % Luftens densitet [kg/m^3]
 
 %% Rear axel parameters
 L = 1.2; % axel längd
-D = 0.1; % axel diameter (tjockare del) Bestäm!
+D = 0.056; % axel diameter (tjockare del) Bestäm!
 d = 0.6*D; % axel diameter (tunnare del)
 R = D/2; % radie (tjockare del)
 r = d/2; % radie(tunnare del)
 
 b_1 = 0.15;         % Lagerposition [m] (100-200 mm) Avstånd från axelns ände (y=0)
-%b_b = 0.08;         % Bromsskiveposition [m] (Ska vara < b_1 enligt tabell)
-%b_d = 0.6;         % Drevposition [m] (Ska vara b_1 < b_d < L/2)
+      % Drevposition [m] (Ska vara b_1 < b_d < L/2)
                     % L/2 = 0.55. Så 0.15 < 0.25 < 0.55. OK.
 
 A = (pi*D^2)/4; % Tvärsnittsarea (tjockare del)
@@ -53,15 +53,14 @@ v_accel = 1;        % Sätt en låg hastighet [m/s]
 n_s = 2.5;          % Säkerhetsfaktor mot plastisk deformation 
 n_u = 2.0;          % Säkerhetsfaktor mot utmattning
 
-
 %% Hjulkrafter calc
-[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, h_luft, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
-[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, h_luft, h, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
+[FD_accel, Nf_accel, Nb_accel, Mb_accel] = accel_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_accel, a1, r_hjul, g);
+[FB_broms, FL_broms, Nf_broms, Nb_broms, Mb_broms] = broms_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_max_ms, a2, r_hjul, g);
 [V_bi_kurva, V_fi_kurva, V_by_kurva, V_fy_kurva, H_bi_kurva, H_fi_kurva, H_by_kurva, H_fy_kurva, Mb_kurva, FD_kurva, V_i_kurva, V_y_kurva, H_i_kurva, H_y_kurva] = kurvtagning_hjulkrafter(df, db, hFL, hTP, m, Cd, rho_luft, v_kurva_ms, R_kurva, L, r_hjul, g);
 
 %% Lagerkrafter calc
 [R_yx_broms, R_ix_broms, R_yz_broms, R_iz_broms, R_iy_broms, Fk_broms, F_broms_broms]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_max_ms, 2, 0, 0, Nb_broms/2, Nb_broms/2, -FB_broms); %Skicka in bromsinput
-[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, 0, 1, 0, 0, Nb_accel/2, Nb_accel/2, FD_accel); %Skicka in accelerationsinput
+[R_yx_accel, R_ix_accel, R_yz_accel, R_iz_accel, R_iy_accel, Fk_accel, F_broms_accel]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_accel, 1, 0, 0, Nb_accel/2, Nb_accel/2, FD_accel); %Skicka in accelerationsinput
 [R_yx_kurv, R_ix_kurv, R_yz_kurv, R_iz_kurv, R_iy_kurv, Fk_kurv, F_broms_kurv]=F_lager(m, L, b_1, r_hjul, r_broms, r_drev, b_b, b_d, a1, a2, Cd, rho_luft, v_kurva_ms, 3, H_bi_kurva, H_by_kurva, V_bi_kurva, V_by_kurva, FD_kurva); %Skicka in kurvtagningsinput
 
 %% Snittstorhet calc
@@ -113,4 +112,4 @@ effektiv_spanning_nominal_max = max([effektiv_spanning_br, effektiv_spanning_acc
 %disp("För att undvika plasticering, utan att ta hänsyn till spänningskoncentrationer, krävs en sträckgräns på minst " + n_s * effektiv_spanning_nominal_max/1000000 + " MPa");
 %disp("Den nödvändiga sträckgränsen för att skydda mot lokal plasticering är: " + strackgrans/1000000 + "MPa");
 
-strackgrans = effektiv_spanning_nominal_max;
+strackgrans = strackgrans;
